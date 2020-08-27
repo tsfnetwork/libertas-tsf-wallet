@@ -1905,6 +1905,7 @@ html {
 *, *:before, *:after {
   -webkit-box-sizing: inherit;
   box-sizing: inherit
+  background-color: red;
 }
 
 button, input, optgroup, select, textarea {
@@ -6193,13 +6194,12 @@ select.browser-default {
 }
 
 select {
-  background-color: #fff;
-  width: 100%;
-  padding: 5px;
-  border: 3px solid #840032;
-  height: 30px;
-  padding-top: 35px;
-  margin-top: 10px;
+    background-color: transparent;
+    width: 100%;
+    border: 3px solid #840032;
+    height: 40px;
+    margin-top: 10px;
+    color: #fff;
 }
 
 .select-label {
@@ -8088,4 +8088,9 @@ input[type=range]::-ms-thumb {
     text-align: center;
     margin-top: 1.2rem
   }
+}
+
+select option {
+    background-color: #212529;
+    border: 1px solid #ffffff;
 }

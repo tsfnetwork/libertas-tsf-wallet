@@ -18,7 +18,6 @@ class Accounts {
   }
 
   exportAccounts() {
-    console.log("KKKKKK");
     var savePath = dialog.showSaveDialog({
       defaultPath: path.join(app.getPath("documents"), "accounts.zip")
     });

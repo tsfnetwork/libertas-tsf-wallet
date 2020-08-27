@@ -11283,3 +11283,11 @@ html.ie11 .dropdown-menu ul.menu li a {
 html.ie11 .bs-searchbox .form-control {
   width: 90%;
 }
+select {
+    background-color: transparent;
+    width: 100%;
+    border: 3px solid #840032;
+    height: 40px;
+    margin-top: 10px;
+    color: #fff;
+}
