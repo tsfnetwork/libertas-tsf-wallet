@@ -1,64 +1,63 @@
 // In renderer process (web page).
-const {ipcRenderer} = require("electron");
+const {ipcRenderer} = require('electron');
 
 class Datatabse {
-  constructor() {}
+    constructor() {}
 
-  getCounters() {
-    var counters = ipcRenderer.sendSync("getJSONFile", "counters.json");
+    getCounters() {
+        var counters = ipcRenderer.sendSync('getJSONFile', 'counters.json');
 
-    if (counters == null) {
-      counters = {};
+        if (counters == null) {
+            counters = {};
+        }
+
+        return counters;
     }
 
-    return counters;
-  }
-
-  setCounters(counters) {
-    ipcRenderer.sendSync("setJSONFile", {
-      file: "counters.json",
-      data: counters
-    });
-  }
-
-  getWallets() {
-    var wallets = ipcRenderer.sendSync("getJSONFile", "wallets.json");
-
-    if (!wallets) {
-      wallets = {
-        names: {}
-      };
+    setCounters(counters) {
+        ipcRenderer.sendSync('setJSONFile',
+        {
+            file: 'counters.json',
+            data: counters
+        });
     }
 
-    return wallets;
-  }
+    getWallets() {
+        var wallets = ipcRenderer.sendSync('getJSONFile', 'wallets.json');
 
-  setWallets(wallets) {
-    ipcRenderer.sendSync("setJSONFile", {
-      file: "wallets.json",
-      data: wallets
-    });
-  }
+        if (!wallets) {
+          wallets = { names: {} };
+        }
 
-  getAddresses() {
-    var addressBook = ipcRenderer.sendSync("getJSONFile", "addresses.json");
-
-    if (!addressBook) {
-      addressBook = {
-        names: {}
-      };
+        return wallets;
     }
 
-    return addressBook;
-  }
+    setWallets(wallets) {
+        ipcRenderer.sendSync('setJSONFile',
+        {
+            file: 'wallets.json',
+            data: wallets
+        });
+    }
 
-  setAddresses(addresses) {
-    ipcRenderer.sendSync("setJSONFile", {
-      file: "addresses.json",
-      data: addresses
-    });
-  }
+    getAddresses() {
+        var addressBook = ipcRenderer.sendSync('getJSONFile', 'addresses.json');
+
+        if (!addressBook) {
+          addressBook = { names: {} };
+        }
+
+        return addressBook;
+    }
+
+    setAddresses(addresses) {
+        ipcRenderer.sendSync('setJSONFile',
+        {
+            file: 'addresses.json',
+            data: addresses
+        });
+    }
 }
 
 // create new account variable
-EthoDatatabse = new Datatabse();
+TSFDatatabse = new Datatabse();

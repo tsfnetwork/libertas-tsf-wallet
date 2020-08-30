@@ -1,11 +1,13 @@
-const {ipcRenderer} = require("electron");
+const {ipcRenderer} = require('electron');
 
 class Wallets {
   constructor() {
     this.addressList = [];
+    this.price = null;
 
-    $.getJSON("https://min-api.cryptocompare.com/data/price?fsym=ETHO&tsyms=USD", function (price) {
-      EthoWallets._setPrice(price.USD);
+    $.getJSON("https://api.coingecko.com/api/v3/simple/price?ids=teslafunds&vs_currencies=usd", function( price )
+    {
+      TSFWallets._setPrice(price['teslafunds'].usd);
     });
   }
 
@@ -40,55 +42,55 @@ class Wallets {
   }
 
   enableButtonTooltips() {
-    EthoUtils.createToolTip("#btnNewAddress", "Create New Address");
-    EthoUtils.createToolTip("#btnRefreshAddress", "Refresh Address List");
-    EthoUtils.createToolTip("#btnExportAccounts", "Export Accounts");
-    EthoUtils.createToolTip("#btnImportAccounts", "Import Accounts");
-    EthoUtils.createToolTip("#btnImportFromPrivateKey", "Import From Private Key");
+    TSFUtils.createToolTip("#btnNewAddress", "Create New Address");
+    TSFUtils.createToolTip("#btnRefreshAddress", "Refresh Address List");
+    TSFUtils.createToolTip("#btnExportAccounts", "Export Accounts");
+    TSFUtils.createToolTip("#btnImportAccounts", "Import Accounts");
+    TSFUtils.createToolTip("#btnImportFromPrivateKey", "Import From Private Key");
   }
 
   validateNewAccountForm() {
-    if (EthoMainGUI.getAppState() == "account") {
-      if (!$("#walletPasswordFirst").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
-        return false;
-      }
+    if (TSFMainGUI.getAppState() == "account") {
+        if (!$("#walletPasswordFirst").val()) {
+            TSFMainGUI.showGeneralError("Password cannot be empty!");
+            return false;
+        }
 
-      if (!$("#walletPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
-        return false;
-      }
+        if (!$("#walletPasswordSecond").val()) {
+          TSFMainGUI.showGeneralError("Password cannot be empty!");
+          return false;
+        }
 
-      if ($("#walletPasswordFirst").val() !== $("#walletPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Passwords do not match!");
-        return false;
-      }
+        if ($("#walletPasswordFirst").val() !== $("#walletPasswordSecond").val()) {
+            TSFMainGUI.showGeneralError("Passwords do not match!");
+            return false;
+        }
 
-      return true;
+        return true;
     } else {
-      return false;
+        return false;
     }
-  }
+}
 
-  validateImportFromKeyForm() {
-    if (EthoMainGUI.getAppState() == "account") {
+validateImportFromKeyForm() {
+    if (TSFMainGUI.getAppState() == "account") {
       if (!$("#inputPrivateKey").val()) {
-        EthoMainGUI.showGeneralError("Private key cannot be empty!");
+        TSFMainGUI.showGeneralError("Private key cannot be empty!");
         return false;
       }
 
       if (!$("#keyPasswordFirst").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
+        TSFMainGUI.showGeneralError("Password cannot be empty!");
         return false;
       }
 
       if (!$("#keyPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
+        TSFMainGUI.showGeneralError("Password cannot be empty!");
         return false;
       }
 
       if ($("#keyPasswordFirst").val() !== $("#keyPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Passwords do not match!");
+        TSFMainGUI.showGeneralError("Passwords do not match!");
         return false;
       }
 
@@ -98,73 +100,82 @@ class Wallets {
     }
   }
 
-  renderWalletsState() {
+
+renderWalletsState() {
     // clear the list of addresses
-    EthoWallets.clearAddressList();
+    TSFWallets.clearAddressList();
 
-    EthoBlockchain.getAccountsData(function (error) {
-      EthoMainGUI.showGeneralError(error);
-    }, function (data) {
-      data.addressData.forEach(element => {
-        EthoWallets.addAddressToList(element.address);
-      });
+    TSFBlockchain.getAccountsData(
+      function(error) {
+        TSFMainGUI.showGeneralError(error);
+      },
+      function(data) {
+        data.addressData.forEach(element => {
+          TSFWallets.addAddressToList(element.address);
+        });
 
-      // render the wallets current state
-      EthoMainGUI.renderTemplate("wallets.html", data);
-      $(document).trigger("render_wallets");
-      EthoWallets.enableButtonTooltips();
+        // render the wallets current state
+        TSFMainGUI.renderTemplate("wallets.html", data);
+        $(document).trigger("render_wallets");
+        TSFWallets.enableButtonTooltips();
 
-      $("#labelSumDollars").html(vsprintf("/ %.2f $ / %.4f $ per TSF", [
-        data.sumBalance * EthoWallets._getPrice(),
-        EthoWallets._getPrice()
-      ]));
-    });
+        $("#labelSumDollars").html(vsprintf("/ %.2f $ &nbsp;&nbsp;&nbsp;&nbsp;Price TSF/USD %.4f $", [data.sumBalance * TSFWallets._getPrice(), TSFWallets._getPrice()]));
+      }
+    );
   }
 }
 
 // the event to tell us that the wallets are rendered
-$(document).on("render_wallets", function () {
-  if ($("#addressTable").length > 0) {
+$(document).on("render_wallets", function() {
+   if ($("#addressTable").length > 0) {
     new Tablesort(document.getElementById("addressTable"));
     $("#addressTable").floatThead();
   }
 
-  $("#btnNewAddress").off("click").on("click", function () {
+  $("#btnNewAddress").off('click').on('click', function() {
     $("#dlgCreateWalletPassword").iziModal();
     $("#walletPasswordFirst").val("");
     $("#walletPasswordSecond").val("");
-    $("#dlgCreateWalletPassword").iziModal("open");
+    $('#dlgCreateWalletPassword').iziModal('open');
 
     function doCreateNewWallet() {
-      $("#dlgCreateWalletPassword").iziModal("close");
+      $('#dlgCreateWalletPassword').iziModal('close');
 
-      if (EthoWallets.validateNewAccountForm()) {
-        EthoBlockchain.createNewAccount($("#walletPasswordFirst").val(), function (error) {
-          EthoMainGUI.showGeneralError(error);
-        }, function (account) {
-          EthoWallets.addAddressToList(account);
-          EthoWallets.renderWalletsState();
+      if (TSFWallets.validateNewAccountForm()) {
+        TSFBlockchain.createNewAccount($("#walletPasswordFirst").val(),
+          function(error) {
+            TSFMainGUI.showGeneralError(error);
+          },
+          function(account) {
+            TSFWallets.addAddressToList(account);
+            TSFWallets.renderWalletsState();
 
-          iziToast.success({title: "Created", message: "New wallet was successfully created", position: "topRight", timeout: 5000});
-        });
+            iziToast.success({
+              title: 'Created',
+              message: 'New wallet was successfully created',
+              position: 'topRight',
+              timeout: 5000
+            });
+          }
+        );
       }
     }
 
-    $("#btnCreateWalletConfirm").off("click").on("click", function () {
+    $("#btnCreateWalletConfirm").off('click').on('click', function() {
       doCreateNewWallet();
     });
 
-    $("#dlgCreateWalletPassword").off("keypress").on("keypress", function (e) {
-      if (e.which == 13) {
+    $("#dlgCreateWalletPassword").off('keypress').on('keypress', function(e) {
+      if(e.which == 13) {
         doCreateNewWallet();
       }
     });
   });
 
-  $(".btnShowAddressTransactions").off("click").on("click", function () {
-    EthoTransactions.setFilter($(this).attr("data-wallet"));
-    EthoMainGUI.changeAppState("transactions");
-    EthoTransactions.renderTransactions();
+  $(".btnShowAddressTransactions").off('click').on('click', function() {
+    TSFTransactions.setFilter($(this).attr('data-wallet'));
+    TSFMainGUI.changeAppState("transactions");
+    TSFTransactions.renderTransactions();
   });
 
   $(".btnShowQRCode").off("click").on("click", function () {
@@ -179,110 +190,130 @@ $(document).on("render_wallets", function () {
     });
   });
 
-  $(".btnChangWalletName").off("click").on("click", function () {
-    var walletAddress = $(this).attr("data-wallet");
-    var walletName = $(this).attr("data-name");
+  $(".btnChangWalletName").off('click').on('click', function() {
+    var walletAddress = $(this).attr('data-wallet');
+    var walletName = $(this).attr('data-name');
 
     $("#dlgChangeWalletName").iziModal();
     $("#inputWalletName").val(walletName);
-    $("#dlgChangeWalletName").iziModal("open");
+    $('#dlgChangeWalletName').iziModal('open');
 
     function doChangeWalletName() {
-      var wallets = EthoDatatabse.getWallets();
+      var wallets = TSFDatatabse.getWallets();
 
       // set the wallet name from the dialog box
       wallets.names[walletAddress] = $("#inputWalletName").val();
-      EthoDatatabse.setWallets(wallets);
+      TSFDatatabse.setWallets(wallets);
 
-      $("#dlgChangeWalletName").iziModal("close");
-      EthoWallets.renderWalletsState();
+      $('#dlgChangeWalletName').iziModal('close');
+      TSFWallets.renderWalletsState();
     }
 
-    $("#btnChangeWalletNameConfirm").off("click").on("click", function () {
+    $("#btnChangeWalletNameConfirm").off('click').on('click', function() {
       doChangeWalletName();
     });
 
-    $("#dlgChangeWalletName").off("keypress").on("keypress", function (e) {
-      if (e.which == 13) {
+    $("#dlgChangeWalletName").off('keypress').on('keypress', function(e) {
+      if(e.which == 13) {
         doChangeWalletName();
       }
     });
   });
 
-  $("#btnRefreshAddress").off("click").on("click", function () {
-    EthoWallets.renderWalletsState();
+  $("#btnRefreshAddress").off('click').on('click', function() {
+    TSFWallets.renderWalletsState();
   });
 
-  $("#btnExportAccounts").off("click").on("click", function () {
-    ipcRenderer.send("exportAccounts", {});
+  $("#btnExportAccounts").off('click').on('click', function() {
+    ipcRenderer.send('exportAccounts', {});
   });
 
-  $("#btnImportAccounts").off("click").on("click", function () {
-    var ImportResult = ipcRenderer.sendSync("importAccounts", {});
+  $("#btnImportAccounts").off('click').on('click', function() {
+    var ImportResult = ipcRenderer.sendSync('importAccounts', {});
 
     if (ImportResult.success) {
-      iziToast.success({title: "Imported", message: ImportResult.text, position: "topRight", timeout: 2000});
+      iziToast.success({
+        title: 'Imported',
+        message: ImportResult.text,
+        position: 'topRight',
+        timeout: 2000
+      });
     } else if (ImportResult.success == false) {
-      EthoMainGUI.showGeneralError(ImportResult.text);
+      TSFMainGUI.showGeneralError(ImportResult.text);
     }
+
   });
 
-  $("#btnImportFromPrivateKey").off("click").on("click", function () {
+  $("#btnImportFromPrivateKey").off('click').on('click', function() {
     $("#dlgImportFromPrivateKey").iziModal();
     $("#inputPrivateKey").val("");
-    $("#dlgImportFromPrivateKey").iziModal("open");
+    $('#dlgImportFromPrivateKey').iziModal('open');
 
     function doImportFromPrivateKeys() {
-      $("#dlgImportFromPrivateKey").iziModal("close");
+      // var account = TSFBlockchain.importFromPrivateKey($("#inputPrivateKey").val());
+      $('#dlgImportFromPrivateKey').iziModal('close');
 
-      if (EthoWallets.validateImportFromKeyForm()) {
-        var account = EthoBlockchain.importFromPrivateKey($("#inputPrivateKey").val(), $("#keyPasswordFirst").val(), function (error) {
-          console.log("clickkkkk2");
-          EthoMainGUI.showGeneralError(error);
-          console.log("clickkkkk3");
+      // if (account) {
+      //   ipcRenderer.sendSync('saveAccount', account[0]);
+      //   TSFWallets.renderWalletsState();
+
+      //   iziToast.success({
+      //     title: 'Imported',
+      //     message: "Account was succesfully imported",
+      //     position: 'topRight',
+      //     timeout: 2000
+      //   });
+
+      // } else {
+      //   TSFMainGUI.showGeneralError("Error importing account from private key!");
+      // }
+      if (TSFWallets.validateImportFromKeyForm()) {
+        var account = TSFBlockchain.importFromPrivateKey($("#inputPrivateKey").val(), $("#keyPasswordFirst").val(), function (error) {
+          TSFMainGUI.showGeneralError(error);
         }, function (account) {
           if (account) {
-            console.log("clickkkkk4");
-            EthoWallets.renderWalletsState();
-            console.log("clickkkkk5");
+            TSFWallets.renderWalletsState();
             iziToast.success({title: "Imported", message: "Account was succesfully imported", position: "topRight", timeout: 2000});
           } else {
-            console.log("clickkkkk6");
-            EthoMainGUI.showGeneralError("Error importing account from private key!");
+            TSFMainGUI.showGeneralError("Error importing account from private key!");
           }
         });
       }
     }
 
-    $("#btnImportFromPrivateKeyConfirm").off("click").on("click", function () {
-      console.log("clickkkkk1");
+    $("#btnImportFromPrivateKeyConfirm").off('click').on('click', function() {
       doImportFromPrivateKeys();
     });
 
-    $("#dlgImportFromPrivateKey").off("keypress").on("keypress", function (e) {
-      if (e.which == 13) {
+    $("#dlgImportFromPrivateKey").off('keypress').on('keypress', function(e) {
+      if(e.which == 13) {
         doImportFromPrivateKeys();
       }
     });
   });
 
-  $(".textAddress").off("click").on("click", function () {
-    EthoMainGUI.copyToClipboard($(this).html());
+  $(".textAddress").off('click').on('click', function() {
+    TSFMainGUI.copyToClipboard($(this).html());
 
-    iziToast.success({title: "Copied", message: "Address was copied to clipboard", position: "topRight", timeout: 2000});
+    iziToast.success({
+      title: 'Copied',
+      message: 'Address was copied to clipboard',
+      position: 'topRight',
+      timeout: 2000
+    });
   });
 });
 
 // event that tells us that geth is ready and up
-$(document).on("onGethReady", function () {
-  EthoMainGUI.changeAppState("account");
-  EthoWallets.renderWalletsState();
+$(document).on("onGtsfReady", function() {
+  TSFMainGUI.changeAppState("account");
+  TSFWallets.renderWalletsState();
 });
 
-$(document).on("onNewAccountTransaction", function () {
-  if (EthoMainGUI.getAppState() == "account") {
-    EthoWallets.renderWalletsState();
+$(document).on("onNewAccountTransaction", function() {
+  if (TSFMainGUI.getAppState() == "account") {
+    TSFWallets.renderWalletsState();
   }
 });
 
-EthoWallets = new Wallets();
+TSFWallets = new Wallets();

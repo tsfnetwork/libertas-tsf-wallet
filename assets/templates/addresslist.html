@@ -1,5 +1,5 @@
 <div id="addressToolbar">
-    <input id="addressListFilter" placeholder="enter search text" type="text">
+    <input id="addressListFilter" placeholder="enter account name" type="text">
     <button type="button" class="btn btn-etho" id="btnClearSearchField"><i class="far fa-trash-alt"></i></button>
 </div>
 <div id="addressList" class="{{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
@@ -26,4 +26,3 @@
         <div id="noWalletsPresent">You don't have any wallets, please import them, or create a new one</div>
     {{/if}}
 </div>
-<span id="nodestorage" style="display:none;">Loading</span>

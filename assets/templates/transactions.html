@@ -1,21 +1,31 @@
 <div id="transactionsWrapper">
-  <table id="tableTransactionsForAll" class="ui tablet stackable table" style="width:100%">
-    <thead>
-      <tr>
-        <th scope="col" style="display:none"></th>
-        <th>Block</th>
-        <th>Timestamp</th>
-        <th>TxHash</th>
-        <th>From</th>
-        <th>To</th>
-        <th>Value</th>
-        <th></th>
-      </tr>
-    </thead>
-  </table>
+    <!----<button type="button" class="btn btn-etho" id="btnRefreshTransactions">Refresh</button>-->
+    <table id="tableTransactionsForAll" class="display tableTransactions" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Block</th>
+                <th>Timestamp</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Value</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>Block</th>
+                <th>Timestamp</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Value</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 
-<!-- transaction details dialog -->
 <div id="dlgTransactionInfo" class="modalDialog" data-izimodal-title="Transaction Info" data-izimodal-subtitle="Detailed info about the selected transaction" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group txInfo">
@@ -47,20 +57,19 @@
       <i class="fas fa-dollar-sign"></i>
       <label>Value:</label>
       <label id="txValue"></label>
-      <label class="currencyTicker">TSF</label>
+      <label class="currencyTicker">ETHO</label>
     </div>
     <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnTxInfoClose">Close</button>
   </div>
 </div>
 
 <div class="loadingOverlay" id="loadingTransactionsOverlay">
-  <div class="loadingWrapper">
-    <div class="loadingTextTransactions">Transaction are loading, please wait...</div>
-    <div class='spinner'>
-      <div class='bounce bounce1'></div>
-      <div class='bounce bounce2'></div>
-      <div class='bounce bounce3'></div>
-    </div>
-    <div></div>
-
-    <span id="nodestorage" style="display:none;">Loading</span>
+    <div class="loadingWrapper">
+        <div class="loadingTextTransactions">Transaction are loading, please wait...</div>
+        <div class='spinner'>
+            <div class='bounce bounce1'></div>
+            <div class='bounce bounce2'></div>
+            <div class='bounce bounce3'></div>
+        </div>
+    <div>
+</div>

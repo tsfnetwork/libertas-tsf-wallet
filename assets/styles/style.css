@@ -1,21 +1,16 @@
 html {
   color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 /* hide / show the body when the loader is finished */
-body>.inner {
+body > .inner {
   display: none;
 }
 
-body.pg-loaded>.inner {
+body.pg-loaded > .inner {
   display: block;
-}
-
-.warning {
-  background-color: yellow;
-  color: black;
 }
 
 /* Style the sidebar - fixed full height */
@@ -26,7 +21,7 @@ body.pg-loaded>.inner {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #000;
+  background-color: #111;
   overflow-x: hidden;
   padding-top: 16px;
 }
@@ -34,37 +29,42 @@ body.pg-loaded>.inner {
 /* Style sidebar links */
 .sidebar a {
   text-decoration: none;
-  font-size: 20px;
-  color: #840032;
+  font-size: 18px;
+  color: #818181;
   display: block;
 }
 
 /* Style links on mouse-over */
 .sidebar a:hover {
-  color: #786798;
+  color: #f1f1f1;
+}
+.sidebar a span:focus{
+  outline: none;
 }
 
 #peerCount {
   bottom: 0;
   height: 20px;
-  color: #fff;
+  color: #aaa;
   position: absolute;
   font-size: 0.8em;
   padding-left: 5px;
 }
 
-#syncProgress {
+#syncProgress
+{
   height: 20px;
   position: fixed;
   z-index: 1;
-  left: 160px;
+  left: 120px;
   right: 0;
   bottom: 0;
   background-color: #111;
   border-top: 1px solid #111;
 }
 
-#mainContent {
+#mainContent
+{
   position: fixed;
   z-index: 1;
   left: 160px;
@@ -72,25 +72,18 @@ body.pg-loaded>.inner {
   right: 0;
   bottom: 20px;
   background-color: #212529;
-  overflow: auto;
 }
 
 /* Style the main content */
 .main {
-  margin-left: 160px;
-  /* Same as the width of the sidenav */
+  margin-left: 160px; /* Same as the width of the sidenav */
   padding: 0px 10px;
 }
 
 /* Add media queries for small screens (when the height of the screen is less than 450px, add a smaller padding and font-size) */
 @media screen and (max-height: 450px) {
-  .sidebar {
-    padding-top: 15px;
-  }
-
-  .sidebar a {
-    font-size: 18px;
-  }
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
 }
 
 .sidebarIcon {
@@ -115,7 +108,7 @@ body.pg-loaded>.inner {
 
 .modalBody {
   margin: 20px;
-  color: #fff;
+  color: #333;
 }
 
 #dlgGeneralError .modalBody {
@@ -129,7 +122,6 @@ body.pg-loaded>.inner {
 #dlgDeleteAddressConfirm .modalBody {
   height: 100px;
 }
-
 #dlgShowAddressQRCode .modalBody {
   height: 300px;
 }
@@ -140,38 +132,28 @@ body.pg-loaded>.inner {
 
 #dlgCreateWalletPassword .modalBody,
 #dlgCreateAddressAndName .modalBody {
-  height: 200px;
+    height: 200px;
 }
 
-#dlgSendWalletPassword .modalBody,
-#dlgImportFromPrivateKey .modalBody {
-  height: 300px;
-}
-
-#dlgTransactionInfo {
-  width: 700px;
-  max-width: 700px !important;
-}
-
-#dlgTransactionInfo .modalBody {
+#dlgSendWalletPassword .modalBody {
   height: 300px;
 }
 
 #dlgAddAddressToBook .modalBody,
 #dlgChangeWalletName .modalBody,
-#dlgChangeAddressName .modalBody {
-  height: 150px;
+#dlgChangeAddressName .modalBody,
+#dlgImportFromPrivateKey .modalBody {
+  height: 300px;
 }
 
 #dlgAddressListBody {
   margin: 0px;
   padding: 20px;
-  background-color: #fff;
+  background-color: #333;
 }
 
 #dlgAddressList .modalBody {
-  color: #fff;
-  background-color: #212529;
+  color: #aaa;
 }
 
 .btn-dialog-confirm {
@@ -188,12 +170,19 @@ body.pg-loaded>.inner {
 
 .modalDialog {
   display: none;
-  border-bottom: 3px solid #7A1336 !important;
+  border-bottom: 3px solid #1721b2 !important;
   border-radius: 0px !important;
 }
 
 .iziModal-header {
-  background: #7A1336 !important;
+  background: rgba(57,100,208,1);
+      background: -moz-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
+      background: -webkit-gradient(left top,right top,color-stop(0,rgba(57,100,208,1)),color-stop(100%,rgba(45,193,201,1)));
+      background: -webkit-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
+      background: -o-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
+      background: -ms-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
+      background: linear-gradient(to right,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%) !important; 
+    border: 1px solid #3964d0 !important;
 }
 
 #walletsToolbar {
@@ -203,8 +192,9 @@ body.pg-loaded>.inner {
   height: 60px;
 }
 
+
 #transactionsWrapper {
-  color: #fff;
+  color: #aaa;
   padding-top: 10px;
 }
 
@@ -223,7 +213,8 @@ div.loadingText {
 }
 
 div.sidebar svg {
-  color: #7A1336;
+  color: #1b87d4;
+  margin-right: 10px;
 }
 
 #tableTransactionsForAll_filter {
@@ -252,12 +243,12 @@ div.sidebar svg {
 }
 
 .dataTables_scrollBody .transactionsBlockNum {
-  color: #f92472;
-  cursor: pointer;
+  color: #4424f9;
 }
 
 .sendWrapper,
-.settingsWrapper {
+.settingsWrapper
+{
   padding: 30px;
 }
 
@@ -290,18 +281,7 @@ div.sidebar svg {
 
 .sendTXInfo label {
   line-height: 30px;
-  font-size: 1.1em;
-}
-
-.txInfo label {
-  line-height: 30px;
-  margin-left: 5px;
-  font-size: 1em;
-}
-
-.txInfo label+label {
-  color: #7A1336;
-  margin-left: 0px;
+  font-size: 1.2em;
 }
 
 .sendTXdivider {
@@ -309,17 +289,21 @@ div.sidebar svg {
   margin-bottom: 20px;
 }
 
+#addrQRCode {
+  text-align: center;
+}
+
 #fromAddressInfo,
 #toAddressInfo,
 #valueToSendInfo,
 #feeToPayInfo {
-  color: #ee6e73;
+  color: rgb(30, 12, 184);
   margin-left: 5px;
   margin-right: 5px;
 }
 
 .accountName {
-  color: #7A1336;
+  color: rgb(30, 13, 182);
 }
 
 .accountAddr {
@@ -338,7 +322,7 @@ div.sidebar svg {
   background-color: #212529;
   display: none;
   position: fixed;
-  left: 160px;
+  left: 120px;
   right: 0;
   bottom: 20px;
   top: 0;
@@ -427,16 +411,4 @@ div.noAddressWrapper {
 #sendFromAddressName,
 #sendToAddressName {
   font-size: 95%;
-}
-
-.etho-red {
-  background-color: #7A1336 !important;
-}
-
-#chartMarketPrice {
-  height: calc(100vh - 260px);
-}
-
-#addrQRCode {
-  text-align: center;
 }

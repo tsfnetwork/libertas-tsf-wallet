@@ -1,40 +1,40 @@
-const {ipcRenderer} = require("electron");
+const {ipcRenderer} = require('electron');
 
 class AddressBook {
-  constructor() {}
+  constructor() {
+  }
 
   setAddressName(address, name) {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = TSFDatatabse.getAddresses();
 
     // set the wallet name from the dialog box
-    addressBook.names[address.toUpperCase()] = name;
-    EthoDatatabse.setAddresses(addressBook);
+    addressBook.names[address] = name;
+    TSFDatatabse.setAddresses(addressBook);
   }
 
   getAddressName(address) {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = TSFDatatabse.getAddresses();
     // set the wallet name from the dialog box
     return addressBook.names[address.toUpperCase()] || "";
   }
 
   getAddressList() {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = TSFDatatabse.getAddresses();
     return addressBook.names;
   }
 
   deleteAddress(address) {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = TSFDatatabse.getAddresses();
     delete addressBook.names[address];
-    EthoDatatabse.setAddresses(addressBook);
+    TSFDatatabse.setAddresses(addressBook);
   }
 
-  enableButtonTooltips() {}
+  enableButtonTooltips() {
+  }
 
   renderAddressBook() {
-    var addressObject = EthoAddressBook.getAddressList();
-    var renderData = {
-      addressData: []
-    };
+    var addressObject = TSFAddressBook.getAddressList();
+    var renderData = { addressData: [] };
 
     for (var key in addressObject) {
       if (addressObject.hasOwnProperty(key)) {
@@ -46,92 +46,93 @@ class AddressBook {
     }
 
     // render the wallets current state
-    EthoMainGUI.renderTemplate("addressBook.html", renderData);
+    TSFMainGUI.renderTemplate("addressBook.html", renderData);
     $(document).trigger("render_addressBook");
-    EthoAddressBook.enableButtonTooltips();
+    TSFAddressBook.enableButtonTooltips();
   }
 }
 
 // the event to tell us that the wallets are rendered
-$(document).on("render_addressBook", function () {
-  if ($("#addressTable").length > 0) {
-    new Tablesort(document.getElementById("addressTable"));
-    $("#addressTable").floatThead();
-  }
-
-  $("#btnNewAddress").off("click").on("click", function () {
+$(document).on("render_addressBook", function() {
+  $("#btnNewAddress").off('click').on('click', function() {
     $("#dlgCreateAddressAndName").iziModal();
     $("#addressName").val("");
     $("#addressHash").val("");
-    $("#dlgCreateAddressAndName").iziModal("open");
+    $('#dlgCreateAddressAndName').iziModal('open');
 
     function doCreateNewWallet() {
-      $("#dlgCreateAddressAndName").iziModal("close");
+      $('#dlgCreateAddressAndName').iziModal('close');
 
-      if (!EthoBlockchain.isAddress($("#addressHash").val())) {
-        EthoMainGUI.showGeneralError("Address must be a valid address!");
+      if (!TSFBlockchain.isAddress($("#addressHash").val())) {
+        TSFMainGUI.showGeneralError("Address must be a valid address!");
       } else {
-        EthoAddressBook.setAddressName($("#addressHash").val(), $("#addressName").val());
-        EthoAddressBook.renderAddressBook();
+        TSFAddressBook.setAddressName($("#addressHash").val(), $("#addressName").val());
+        TSFAddressBook.renderAddressBook();
 
-        iziToast.success({title: "Created", message: "New address was successfully created", position: "topRight", timeout: 5000});
+        iziToast.success({
+          title: 'Created',
+          message: 'New address was successfully created',
+          position: 'topRight',
+          timeout: 5000
+        });
+
       }
     }
 
-    $("#btnCreateAddressConfirm").off("click").on("click", function () {
+    $("#btnCreateAddressConfirm").off('click').on('click', function() {
       doCreateNewWallet();
     });
 
-    $("#dlgCreateAddressAndName").off("keypress").on("keypress", function (e) {
-      if (e.which == 13) {
+    $("#dlgCreateAddressAndName").off('keypress').on('keypress', function(e) {
+      if(e.which == 13) {
         doCreateNewWallet();
       }
     });
   });
 
-  $(".btnChangAddressName").off("click").on("click", function () {
-    var walletAddress = $(this).attr("data-address");
-    var walletName = $(this).attr("data-name");
+  $(".btnChangAddressName").off('click').on('click', function() {
+    var walletAddress = $(this).attr('data-address');
+    var walletName = $(this).attr('data-name');
 
     $("#dlgChangeAddressName").iziModal();
     $("#inputAddressName").val(walletName);
-    $("#dlgChangeAddressName").iziModal("open");
+    $('#dlgChangeAddressName').iziModal('open');
 
     function doChangeAddressName() {
-      EthoAddressBook.setAddressName(walletAddress, $("#inputAddressName").val());
-      $("#dlgChangeAddressName").iziModal("close");
-      EthoAddressBook.renderAddressBook();
+      TSFAddressBook.setAddressName(walletAddress, $("#inputAddressName").val());
+      $('#dlgChangeAddressName').iziModal('close');
+      TSFAddressBook.renderAddressBook();
     }
 
-    $("#btnChangeAddressNameConfirm").off("click").on("click", function () {
+    $("#btnChangeAddressNameConfirm").off('click').on('click', function() {
       doChangeAddressName();
     });
 
-    $("#dlgChangeAddressName").off("keypress").on("keypress", function (e) {
-      if (e.which == 13) {
+    $("#dlgChangeAddressName").off('keypress').on('keypress', function(e) {
+      if(e.which == 13) {
         doChangeAddressName();
       }
     });
   });
 
-  $(".btnDeleteAddress").off("click").on("click", function () {
-    var deleteAddress = $(this).attr("data-address");
+  $(".btnDeleteAddress").off('click').on('click', function() {
+    var deleteAddress = $(this).attr('data-address');
 
     $("#dlgDeleteAddressConfirm").iziModal();
-    $("#dlgDeleteAddressConfirm").iziModal("open");
+    $('#dlgDeleteAddressConfirm').iziModal('open');
 
-    $("#btnDeleteAddressCancel").off("click").on("click", function () {
-      $("#dlgDeleteAddressConfirm").iziModal("close");
+    $("#btnDeleteAddressCancel").off('click').on('click', function() {
+      $('#dlgDeleteAddressConfirm').iziModal('close');
     });
 
-    $("#btnDeleteAddressConfirm").off("click").on("click", function () {
-      $("#dlgDeleteAddressConfirm").iziModal("close");
-      EthoAddressBook.deleteAddress(deleteAddress);
-      EthoAddressBook.renderAddressBook();
+    $("#btnDeleteAddressConfirm").off('click').on('click', function() {
+      $('#dlgDeleteAddressConfirm').iziModal('close');
+      TSFAddressBook.deleteAddress(deleteAddress);
+      TSFAddressBook.renderAddressBook();
     });
   });
 
-  $(".btnShowQRCode").off("click").on("click", function () {
+    $(".btnShowQRCode").off("click").on("click", function () {
     var QRCodeAddress = $(this).attr("data-address");
     $("#dlgShowAddressQRCode").iziModal();
     $("#addrQRCode").html("");
@@ -143,11 +144,16 @@ $(document).on("render_addressBook", function () {
     });
   });
 
-  $(".textAddress").off("click").on("click", function () {
-    EthoMainGUI.copyToClipboard($(this).html());
+  $(".textAddress").off('click').on('click', function() {
+    TSFMainGUI.copyToClipboard($(this).html());
 
-    iziToast.success({title: "Copied", message: "Address was copied to clipboard", position: "topRight", timeout: 2000});
-  });
+    iziToast.success({
+      title: 'Copied',
+      message: 'Address was copied to clipboard',
+      position: 'topRight',
+      timeout: 2000
+    }); 
+  });  
 });
 
-EthoAddressBook = new AddressBook();
+TSFAddressBook = new AddressBook();
