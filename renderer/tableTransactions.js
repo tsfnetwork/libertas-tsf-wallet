@@ -56,14 +56,25 @@ class tableTransactions {
                         var th = data * 1000;
                         console.log("th", th);
                         // return moment(data).format("MMM Do YYYY HH:mm:ss");
-                        return moment(th).format("DD MMM YYYY[\r\n]hh:mm a");
+                        if (typeof data === 'string') {
+                             return data;
+                        } else if (data === null) {
+                            return "Pending";
+                        } else {
+                            return moment(th).format("DD MMM YYYY[\r\n]hh:mm a");
+                        }
                     }
                 },
                 {
                     "targets": 5,
                     "render": function ( data, type, row ) {
                         console.log(data);
+                        // console.log(typeof data);
+                        // var stringData = data.toString();
+                        // console.log(typeof stringData);
                         // return parseFloat(web3Local.utils.fromWei(TSFUtils.toFixed(parseFloat(data)).toString(), 'ether')).toFixed(2);
+                        // var howmuch = web3Local.utils.fromWei('data', 'ether');
+                        // console.log(howmuch);
                         return data;
                     }
                 },

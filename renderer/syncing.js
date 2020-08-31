@@ -36,7 +36,6 @@ var peerCountInterval = setInterval(function()
 {
   web3Local.eth.net.getPeerCount(function(error, count) {
     $("#peerCount").html(vsprintf("Peer Count: %d", [count]));
-    console.log(count);
   });
 }, 5000);
 
@@ -56,9 +55,7 @@ function StartSyncProcess() {
           web3Local.eth.getBlock("latest", function(error, localBlock) {
             if (!error) {
               if (localBlock.number > 0) {
-                console.log(localBlock.number);
                 if (!TSFTransactions.getIsSyncing()) {
-                  console.log("not getIsSyncing");
                   SyncProgress.animate(1);
                   SyncProgress.setText(vsprintf('%d/%d (100%%)', [localBlock.number, localBlock.number]));
                 }

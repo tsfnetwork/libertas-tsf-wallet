@@ -141,16 +141,23 @@ class Transactions {
                     function(data) {
                         if (data.transactions) {
                             data.transactions.forEach(element => {
+                                
                                 if (element.from && element.to) {
                                     if ((TSFWallets.getAddressExists(element.from)) || (TSFWallets.getAddressExists(element.to))) {
+                                        console.log(element);
+                                        var amount = element.value;
+                                        var amountInEther = web3Local.utils.fromWei(amount.toString(), 'ether');
                                         var Transaction = {
                                             block: element.blockNumber.toString(),
                                             txhash: element.hash.toLowerCase(),
                                             fromaddr: element.from.toLowerCase(),
-                                            timestamp: moment.unix(data.timestamp).format('YYYY-MM-DD HH:mm:ss'),
+                                            // timestamp: moment(element.timestamp).format("DD MMM YYYY[\r\n]hh:mm a"),
+                                            timestamp: moment(element.timestamp).format("DD MMM YYYY[\r\n]hh:mm a"),
                                             toaddr: element.to.toLowerCase(),
-                                            value: Number(element.value).toExponential(5).toString().replace('+','')
+                                            value: amountInEther
+                                            // value: Number(element.value).toFixed(3).toString().replace('+','')
                                         }
+                                        console.log(Transaction);
 
                                         // store transaction and notify about new transactions
                                         ipcRenderer.send('storeTransaction', Transaction);
