@@ -9,7 +9,8 @@
         <span class="sumCurrency"  id="labelSumCurrency">TSF</span>
         <span class="sumDollars" id="labelSumDollars">/ 0.00 $ Price TSF/USD 0.00 $</span></div>
 </div>
-<div id="addressList" class="{{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
+<!-- <div id="addressList" class="{{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}"> -->
+<div id="addressList" class="walletsWrapper">
     {{#if addressData.length}}
         <table class="bordered" id="addressTable">
             <thead>
@@ -18,15 +19,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Address</th>
                     <th scope="col"></th>
-                    <th scope="col">Balance:
-                        <!-- <label for="cars">Choose a car:</label> -->
-                        <!-- <select id="cars" name="cars">
-                          <option value="volvo">Volvo</option>
-                          <option value="saab">Saab</option>
-                          <option value="fiat">Fiat</option>
-                          <option value="audi">Audi</option>
-                        </select> -->
-                    </th>
+                    <th scope="col">Balance</th>
                 </tr>
             </thead>
             <tbody>

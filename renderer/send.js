@@ -65,7 +65,9 @@ class SendTransaction {
 }
 
 $(document).on("render_send", function() {
-    $('select').formSelect( {classes: "fromAddressSelect"});
+    // $('select').formSelect( {classes: "fromAddressSelect"});
+    $('select#sendFromAddress').formSelect({classes: "fromAddressSelect"});
+    $('select#tokens').formSelect({classes: "tokenValue"});
 
     // $("#sendFromAddress").on("change", function() {
     //     web3Local.eth.getBalance(this.value, function(error, balance) {
@@ -108,9 +110,47 @@ $(document).on("render_send", function() {
         console.log(addrName); 
         var addrValue = optionText.substr(optionText.indexOf("-") + 1).substring(1);
         console.log(addrValue);
+        var addr42 = addrValue.slice(0,42);
+        console.log(addr42);
+        // $.getJSON("https://explorer.tsf-platform.com/api/v1/address/tokenBalance/" + addr42,  function( result ) {
+        //         console.log(result);
+        //         var binarBal = result.balance.binar;
+        //         console.log(binarBal);
+        //         $("#binarBalanceHolder").html(binarBal);
+        //         var szarBal = result.balance.szar;
+        //         console.log(szarBal);
+        //         $("#szarBalanceHolder").html(szarBal);
+        //         var boltBal = result.balance.bolt;
+        //         console.log(boltBal);
+        //         $("#boltBalanceHolder").html(boltBal);
+        //         var fusionBal = result.balance.fusion;
+        //         console.log(fusionBal);
+        //         $("#fusionBalanceHolder").html(fusionBal);
+        //         // result.forEach(element => {
+        //         //     var amount = parseFloat(element.value);
+        //         //     console.log("amount", amount);
+        //         //     var timeS = element.timestamp;
+        //         //     console.log("timestamp", timeS);
+        //         //      if (element.from && element.to) {
+        //         //         ipcRenderer.send('storeTransaction', {
+        //         //             block: element.blockNumber.toString(),
+        //         //             txhash: element.hash.toLowerCase(),
+        //         //             fromaddr: element.from.toLowerCase(),
+        //         //             timestamp: element.timestamp,
+        //         //             toaddr: element.to.toLowerCase(),
+        //         //             value: amount
+        //         //         });
+        //         //     }
+        //         // });
+
+        //         // call the transaction sync for the next address
+        //         // TSFTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
+              
+        // });
         var totalAmount = addrValue.trim().substring(45);
         console.log(totalAmount);
-        $("#sendMaxAmmount").html(totalAmount);
+        $(".tokenValue input").html(totalAmount);
+        
         $(".fromAddressSelect input").val(addrValue.trim().slice(0,42));  
         $("#sendFromAddressName").html(addrName.trim());          
     });       

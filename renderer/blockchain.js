@@ -147,6 +147,7 @@ class Blockchain {
 
                 var addressInfo = {};
                 addressInfo.balance = 0;
+                addressInfo.binarBalance = 0;
                 addressInfo.address = res[i];
                 addressInfo.name = walletName;
                 rendererData.addressData.push(addressInfo);
@@ -205,8 +206,9 @@ class Blockchain {
             //         console.log(binarBalance.toString());
             //     });
             // })
-            contract.methods.balanceOf(binarHolder).call().then(function (bal) {
-                console.log(bal);
+            contract.methods.balanceOf(binarHolder).call().then(function (binarBalance) {
+                rendererData.addressData[index].binarBalance = binarBalance;
+                console.log(binarBalance);
             });
             
             // web3Local.eth.getBalance(rendererData.addressData[index].address, function(error, binarBalance) {

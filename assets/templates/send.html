@@ -27,18 +27,36 @@
                     <input id="sendAmmount" placeholder="0" type="number" value="0">
                     <label for="sendAmmount" class="active">Amount:</label>
                 </div>
-                <div class="input-field col s6">
+                <div class="input-field col s3">
+                    
+                        <!-- <span id="sendMaxAmmount">0</span><span>TSF</span>
+                        <button type="button" class="btn btn-etho" id="btnSendAll">Send All</button>    -->
+                        <!-- <label for="cars">Choose:</label> -->
+
+                        <select name="tokens" id="tokens">
+                            <option value="tsf">TSF <span id="tsfBalanceHolder"></span></option>
+                            <option value="binar">BINAR <span id="binarBalanceHolder"></span></option>
+                            <option value="szar">SZAR <span id="szarBalanceHolder"></span></option>
+                            <option value="fusion">FUSION <span id="fusionBalanceHolder"></span></option>
+                            <option value="bolt">BOLT <span id="boltBalanceHolder"></span></option>
+                        </select>
+                   
+                </div>
+                <div class="input-field col s3">
                     <div class="input-field col s12">
-                        <span id="sendMaxAmmount">0</span><span>TSF</span>
-                        <button type="button" class="btn btn-etho" id="btnSendAll">Send All</button>   
+                        <button type="button" class="btn btn-etho" id="btnSendTransaction">Send</button>
+                        <!-- <span id="sendMaxAmmount">0</span><span>TSF</span>
+                        <button type="button" class="btn btn-etho" id="btnSendAll">Send All</button>    -->
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="input-field col s12">
                     <button type="button" class="btn btn-etho" id="btnSendTransaction">Send</button>    
                 </div>
-            </div>
+            </div> -->
+            
+            
         </form>
     </div>
     <div id="cardTransactionsForAddress" class="card-panel" style="display: none;">
