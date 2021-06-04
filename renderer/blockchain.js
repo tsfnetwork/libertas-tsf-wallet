@@ -154,6 +154,7 @@ class Blockchain {
 
               if (rendererData.addressData.length > 0) {
                 updateBalance(counter);
+                updateBinarBalance(counter);
               } else {
                 clbSuccess(rendererData);
               }
@@ -169,11 +170,57 @@ class Blockchain {
             if (counter < rendererData.addressData.length - 1) {
               counter++;
               updateBalance(counter);
+              updateBinarBalance(counter);
             } else {
               rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
               clbSuccess(rendererData);
             }
           });
+        }
+        function updateBinarBalance(index)
+        {
+            var abi = [{
+                "constant": true,
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
+                "name": "balanceOf",
+                "outputs": [{
+                    "name": "balance",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            }];
+            // var contract = web3Local.eth.contract(abi).at("0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
+            var contract = new web3Local.eth.Contract(abi, "0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
+            // var binarHolder = "0x3B4038E6B1B928DC663a37aA6BFf801373be6fC3";
+            var binarHolder = rendererData.addressData[index].address;
+            // contract.balanceOf(binarHolder, (error, binarBalance) => {
+            //     contract.decimals((error, decimals) => {
+            //         // calculate a balance
+            //         binarBalance = balance.div(10**decimals);
+            //         console.log(binarBalance.toString());
+            //     });
+            // })
+            contract.methods.balanceOf(binarHolder).call().then(function (bal) {
+                console.log(bal);
+            });
+            
+            // web3Local.eth.getBalance(rendererData.addressData[index].address, function(error, binarBalance) {
+            //     rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, 'ether')).toFixed(2);
+            //     rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, 'ether'));
+
+            //     if (counter < rendererData.addressData.length - 1) {
+            //     counter++;
+            //     updateBalance(counter);
+            //     } else {
+            //     rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
+            //     clbSuccess(rendererData);
+            //     }
+            // });
         }
     }
 

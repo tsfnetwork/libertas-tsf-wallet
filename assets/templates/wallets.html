@@ -14,11 +14,19 @@
         <table class="bordered" id="addressTable">
             <thead>
                 <tr>
-                <th scope="col"></th>
-                <th scope="col">Name</th>
-                <th scope="col">Address</th>
-                <th scope="col"></th>
-                <th scope="col">Balance</th>
+                    <th scope="col"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col"></th>
+                    <th scope="col">Balance:
+                        <!-- <label for="cars">Choose a car:</label> -->
+                        <!-- <select id="cars" name="cars">
+                          <option value="volvo">Volvo</option>
+                          <option value="saab">Saab</option>
+                          <option value="fiat">Fiat</option>
+                          <option value="audi">Audi</option>
+                        </select> -->
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +42,7 @@
                             </button>
                         </td>
                         <td>{{balance}}</td>
+                        
                     </tr>
                 {{/addressData}}
             </tbody>
