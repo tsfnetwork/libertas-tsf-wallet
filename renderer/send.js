@@ -1,20 +1,22 @@
 // In renderer process (web page).
-const {ipcRenderer} = require('electron');
+const {
+    ipcRenderer
+} = require('electron');
 
 class SendTransaction {
     constructor() {}
 
-     enableSendButtonTooltips() {
+    enableSendButtonTooltips() {
         TSFUtils.createToolTip("#btnAddToAddressBook", "Add this Address to AddressBook");
         TSFUtils.createToolTip("#btnLookForToAddress", "Look for Existing Address");
-      }
+    }
 
     renderSendState() {
         TSFBlockchain.getAccountsData(
-            function(error) {
-              TSFMainGUI.showGeneralError(error);
+            function (error) {
+                TSFMainGUI.showGeneralError(error);
             },
-            function(data) {
+            function (data) {
                 TSFMainGUI.renderTemplate("send.html", data);
                 $(document).trigger("render_send");
             }
@@ -64,10 +66,14 @@ class SendTransaction {
     }
 }
 
-$(document).on("render_send", function() {
+$(document).on("render_send", function () {
     // $('select').formSelect( {classes: "fromAddressSelect"});
-    $('select#sendFromAddress').formSelect({classes: "fromAddressSelect"});
-    $('select#tokens').formSelect({classes: "tokenValue"});
+    $('select#sendFromAddress').formSelect({
+        classes: "fromAddressSelect"
+    });
+    $('select#tokens').formSelect({
+        classes: "tokenValue"
+    });
 
     // $("#sendFromAddress").on("change", function() {
     //     web3Local.eth.getBalance(this.value, function(error, balance) {
@@ -85,32 +91,32 @@ $(document).on("render_send", function() {
     // });
     TSFSend.enableSendButtonTooltips();
 
-    $("#btnSendAll").off('click').on('click', function() {
+    $("#btnSendAll").off('click').on('click', function () {
         $("#sendAmmount").focus();
         $("#sendAmmount").val($("#sendMaxAmmount").html());
     });
 
-    $("#sendToAddress").off('input').on('input', function() {
+    $("#sendToAddress").off('input').on('input', function () {
         var addressName = null;
         $("#sendToAddressName").html("");
-        addressName = TSFAddressBook.getAddressName($("#sendToAddress").val()); 
+        addressName = TSFAddressBook.getAddressName($("#sendToAddress").val());
 
-        if (!addressName) { 
+        if (!addressName) {
             var wallets = TSFDatatabse.getWallets();
-            addressName = wallets.names[$("#sendToAddress").val()]; 
-            console.log("addressName", addressName);     
+            addressName = wallets.names[$("#sendToAddress").val()];
+            console.log("addressName", addressName);
         }
         $("#sendToAddressName").html(addressName);
     });
 
-    $("#sendFromAddress").off('change').on('change', function() {
+    $("#sendFromAddress").off('change').on('change', function () {
         var optionText = $(this).find("option:selected").text();
         console.log(optionText);
         var addrName = optionText.substr(0, optionText.indexOf('-'));
-        console.log(addrName); 
+        console.log(addrName);
         var addrValue = optionText.substr(optionText.indexOf("-") + 1).substring(1);
         console.log(addrValue);
-        var addr42 = addrValue.slice(0,42);
+        var addr42 = addrValue.slice(0, 42);
         console.log(addr42);
         // $.getJSON("https://explorer.tsf-platform.com/api/v1/address/tokenBalance/" + addr42,  function( result ) {
         //         console.log(result);
@@ -145,22 +151,150 @@ $(document).on("render_send", function() {
 
         //         // call the transaction sync for the next address
         //         // TSFTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
-              
-        // });
-        var totalAmount = addrValue.trim().substring(45);
-        console.log(totalAmount);
-        $(".tokenValue input").html(totalAmount);
-        
-        $(".fromAddressSelect input").val(addrValue.trim().slice(0,42));  
-        $("#sendFromAddressName").html(addrName.trim());          
-    });       
 
-    $("#btnLookForToAddress").off('click').on('click', function() {
+        // });
+        function getBinarBalance(addr42) {
+            var abi = [{
+                "constant": true,
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
+                "name": "balanceOf",
+                "outputs": [{
+                    "name": "balance",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            }];
+
+            var contract = new web3Local.eth.Contract(abi, "0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
+            var binarHolder = addr42;
+            contract.methods.balanceOf(binarHolder).call().then(function (binarBalanceTotal) {
+                console.log(parseInt(binarBalanceTotal));
+                $("#tokenBalance").val(binarBalanceTotal);
+            });
+        }
+
+        function getSzarBalance(addr42) {
+            var abi = [{
+                "constant": true,
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
+                "name": "balanceOf",
+                "outputs": [{
+                    "name": "balance",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            }];
+
+            var contract = new web3Local.eth.Contract(abi, "0x16545038bffb6604a1113198d93b31fc72fb2d76");
+            var szarHolder = addr42;
+            contract.methods.balanceOf(szarHolder).call().then(function (szarBalanceTotal) {
+                console.log(parseInt(szarBalanceTotal));
+                $("#tokenBalance").val(szarBalanceTotal);
+            });
+        }
+
+        function getFusionBalance(addr42) {
+            var abi = [{
+                "constant": true,
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
+                "name": "balanceOf",
+                "outputs": [{
+                    "name": "balance",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            }];
+
+            var contract = new web3Local.eth.Contract(abi, "0xc0e4dec1ec422484a02b894997ead8818a955e45");
+            var fusionHolder = addr42;
+            contract.methods.balanceOf(fusionHolder).call().then(function (fusionBalanceTotal) {
+                console.log(parseInt(fusionBalanceTotal));
+                var fusionBalanceFormated = parseFloat(web3Local.utils.fromWei(fusionBalanceTotal, 'ether'));
+                console.log(fusionBalanceFormated);
+                $("#tokenBalance").val(fusionBalanceFormated);
+            });
+        }
+
+        function getBoltBalance(addr42) {
+            var abi = [{
+                "constant": true,
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
+                "name": "balanceOf",
+                "outputs": [{
+                    "name": "balance",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            }];
+
+            var contract = new web3Local.eth.Contract(abi, "0xc0e4dec1ec422484a02b894997ead8818a955e45");
+            var boltHolder = addr42;
+            contract.methods.balanceOf(boltHolder).call().then(function (boltBalanceTotal) {
+                console.log(parseInt(boltBalanceTotal));
+                var boltBalanceFormated = parseFloat(web3Local.utils.fromWei(boltBalanceTotal, 'ether'));
+                console.log(boltBalanceFormated);
+                $("#tokenBalance").val(boltBalanceFormated);
+            });
+        }
+        // getBinarBalance(addr42);
+        // console.log(binarTotal);
+        var totalAmount = parseFloat(addrValue.trim().substring(45));
+        console.log(totalAmount);
+        $("#tokenBalance").val(totalAmount);
+        $(".tokenValue input").html(totalAmount);
+
+        $(".fromAddressSelect input").val(addrValue.trim().slice(0, 42));
+        $("#sendFromAddressName").html(addrName.trim());
+
+        $("#tokens").off('change').on('change', function () {
+            var currencySelected = $(this).find("option:selected").text();
+            console.log(currencySelected);
+            if (currencySelected === "TSF") {
+                console.log("TSF");
+                $("#tokenBalance").val(totalAmount);
+            } else if (currencySelected === "BINAR") {
+                console.log("BINAR");
+                getBinarBalance(addr42);
+            } else if (currencySelected === "SZAR") {
+                console.log("SZAR");
+                getSzarBalance(addr42);
+            } else if (currencySelected === "BOLT") {
+                console.log("BOLT");
+                getBoltBalance(addr42);
+            } else if (currencySelected === "FUSION") {
+                console.log("FUSION");
+                getFusionBalance(addr42);
+            }
+        });
+
+    });
+
+    $("#btnLookForToAddress").off('click').on('click', function () {
         TSFBlockchain.getAddressListData(
-            function(error) {
-              TSFMainGUI.showGeneralError(error);
+            function (error) {
+                TSFMainGUI.showGeneralError(error);
             },
-            function(addressList) {
+            function (addressList) {
                 var addressBook = TSFAddressBook.getAddressList();
 
                 for (var key in addressBook) {
@@ -172,21 +306,23 @@ $(document).on("render_send", function() {
                     }
                 }
 
-                $("#dlgAddressList").iziModal({ width: "800px" });
+                $("#dlgAddressList").iziModal({
+                    width: "800px"
+                });
                 TSFMainGUI.renderTemplate("addresslist.html", addressList, $("#dlgAddressListBody"));
                 $('#dlgAddressList').iziModal('open');
 
-                $(".btnSelectToAddress").off('click').on('click', function() {
+                $(".btnSelectToAddress").off('click').on('click', function () {
                     $("#sendToAddressName").html($(this).attr('data-name'));
                     $("#sendToAddress").val($(this).attr('data-wallet'));
                     $('#dlgAddressList').iziModal('close');
                 });
 
-                $('#addressListFilter').off('input').on('input',function(e){
+                $('#addressListFilter').off('input').on('input', function (e) {
                     TSFUtils.filterTable($("#addressTable"), $('#addressListFilter').val());
                 });
 
-                $("#btnClearSearchField").off('click').on('click', function() {
+                $("#btnClearSearchField").off('click').on('click', function () {
                     TSFUtils.filterTable($("#addressTable"), "");
                     $('#addressListFilter').val("")
                 });
@@ -194,7 +330,7 @@ $(document).on("render_send", function() {
         );
     });
 
-    $("#btnAddToAddressBook").off('click').on('click', function() {
+    $("#btnAddToAddressBook").off('click').on('click', function () {
         if (TSFBlockchain.isAddress($("#sendToAddress").val())) {
             $("#dlgAddAddressToBook").iziModal();
             $("#inputAddressName").val("");
@@ -215,25 +351,25 @@ $(document).on("render_send", function() {
             TSFMainGUI.showGeneralError("Recipient address is not valid!");
         }
 
-        $("#btnAddAddressToBookConfirm").off('click').on('click', function() {
+        $("#btnAddAddressToBookConfirm").off('click').on('click', function () {
             doAddAddressToAddressBook();
         });
 
-        $("#dlgAddAddressToBook").off('keypress').on('keypress', function(e) {
-            if(e.which == 13) {
+        $("#dlgAddAddressToBook").off('keypress').on('keypress', function (e) {
+            if (e.which == 13) {
                 doAddAddressToAddressBook();
             }
         });
     });
 
 
-    $("#btnSendTransaction").off('click').on('click', function() {
+    $("#btnSendTransaction").off('click').on('click', function () {
         if (TSFSend.validateSendForm()) {
             TSFBlockchain.getTranasctionFee($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(),
-                function(error) {
+                function (error) {
                     TSFMainGUI.showGeneralError(error);
                 },
-                function(data) {
+                function (data) {
                     $("#dlgSendWalletPassword").iziModal();
                     $("#walletPassword").val("");
                     $("#fromAddressInfo").html($("#sendFromAddress").val());
@@ -250,15 +386,15 @@ $(document).on("render_send", function() {
                             $("#sendFromAddress").val(),
                             $("#sendToAddress").val(),
                             $("#sendAmmount").val(),
-                            function(error) {
+                            function (error) {
                                 TSFMainGUI.showGeneralError(error);
                             },
-                            function(data) {
+                            function (data) {
                                 TSFBlockchain.sendTransaction(data.raw,
-                                    function(error) {
+                                    function (error) {
                                         TSFMainGUI.showGeneralError(error);
                                     },
-                                    function(data1) {
+                                    function (data1) {
                                         TSFSend.resetSendForm();
                                         console.log("data1-txhash", data1);
                                         iziToast.success({
@@ -269,10 +405,10 @@ $(document).on("render_send", function() {
                                         });
 
                                         TSFBlockchain.getTransaction(data1,
-                                            function(error) {
+                                            function (error) {
                                                 TSFMainGUI.showGeneralError(error);
                                             },
-                                            function(transaction) {
+                                            function (transaction) {
                                                 console.log("transaction", transaction);
                                                 var amount = web3Local.utils.fromWei(transaction.value, 'ether');
                                                 console.log(amount);
@@ -294,12 +430,12 @@ $(document).on("render_send", function() {
                         );
                     }
 
-                    $("#btnSendWalletPasswordConfirm").off('click').on('click', function() {
+                    $("#btnSendWalletPasswordConfirm").off('click').on('click', function () {
                         doSendTransaction();
                     });
 
-                    $("#dlgSendWalletPassword").off('keypress').on('keypress', function(e) {
-                        if(e.which == 13) {
+                    $("#dlgSendWalletPassword").off('keypress').on('keypress', function (e) {
+                        if (e.which == 13) {
                             doSendTransaction();
                         }
                     });

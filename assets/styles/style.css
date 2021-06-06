@@ -5,15 +5,17 @@ html {
 }
 
 /* hide / show the body when the loader is finished */
-body > .inner {
+
+body>.inner {
   display: none;
 }
 
-body.pg-loaded > .inner {
+body.pg-loaded>.inner {
   display: block;
 }
 
 /* Style the sidebar - fixed full height */
+
 .sidebar {
   height: 100%;
   width: 160px;
@@ -27,6 +29,7 @@ body.pg-loaded > .inner {
 }
 
 /* Style sidebar links */
+
 .sidebar a {
   text-decoration: none;
   font-size: 18px;
@@ -35,10 +38,12 @@ body.pg-loaded > .inner {
 }
 
 /* Style links on mouse-over */
+
 .sidebar a:hover {
   color: #f1f1f1;
 }
-.sidebar a span:focus{
+
+.sidebar a span:focus {
   outline: none;
   color: #f1f1f1;
 }
@@ -52,8 +57,7 @@ body.pg-loaded > .inner {
   padding-left: 5px;
 }
 
-#syncProgress
-{
+#syncProgress {
   height: 20px;
   position: fixed;
   z-index: 1;
@@ -64,8 +68,7 @@ body.pg-loaded > .inner {
   border-top: 1px solid #111;
 }
 
-#mainContent
-{
+#mainContent {
   position: fixed;
   z-index: 1;
   left: 160px;
@@ -76,15 +79,22 @@ body.pg-loaded > .inner {
 }
 
 /* Style the main content */
+
 .main {
-  margin-left: 160px; /* Same as the width of the sidenav */
+  margin-left: 160px;
+  /* Same as the width of the sidenav */
   padding: 0px 10px;
 }
 
 /* Add media queries for small screens (when the height of the screen is less than 450px, add a smaller padding and font-size) */
+
 @media screen and (max-height: 450px) {
-  .sidebar {padding-top: 15px;}
-  .sidebar a {font-size: 18px;}
+  .sidebar {
+    padding-top: 15px;
+  }
+  .sidebar a {
+    font-size: 18px;
+  }
 }
 
 .sidebarIcon {
@@ -123,6 +133,7 @@ body.pg-loaded > .inner {
 #dlgDeleteAddressConfirm .modalBody {
   height: 100px;
 }
+
 #dlgShowAddressQRCode .modalBody {
   height: 300px;
 }
@@ -133,7 +144,7 @@ body.pg-loaded > .inner {
 
 #dlgCreateWalletPassword .modalBody,
 #dlgCreateAddressAndName .modalBody {
-    height: 200px;
+  height: 200px;
 }
 
 #dlgSendWalletPassword .modalBody {
@@ -176,14 +187,14 @@ body.pg-loaded > .inner {
 }
 
 .iziModal-header {
-  background: rgba(57,100,208,1);
-      background: -moz-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
-      background: -webkit-gradient(left top,right top,color-stop(0,rgba(57,100,208,1)),color-stop(100%,rgba(45,193,201,1)));
-      background: -webkit-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
-      background: -o-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
-      background: -ms-linear-gradient(left,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%);
-      background: linear-gradient(to right,rgba(57,100,208,1) 0,rgba(45,193,201,1) 100%) !important; 
-    border: 1px solid #3964d0 !important;
+  background: rgba(57, 100, 208, 1);
+  background: -moz-linear-gradient(left, rgba(57, 100, 208, 1) 0, rgba(45, 193, 201, 1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0, rgba(57, 100, 208, 1)), color-stop(100%, rgba(45, 193, 201, 1)));
+  background: -webkit-linear-gradient(left, rgba(57, 100, 208, 1) 0, rgba(45, 193, 201, 1) 100%);
+  background: -o-linear-gradient(left, rgba(57, 100, 208, 1) 0, rgba(45, 193, 201, 1) 100%);
+  background: -ms-linear-gradient(left, rgba(57, 100, 208, 1) 0, rgba(45, 193, 201, 1) 100%);
+  background: linear-gradient(to right, rgba(57, 100, 208, 1) 0, rgba(45, 193, 201, 1) 100%) !important;
+  border: 1px solid #3964d0 !important;
 }
 
 #walletsToolbar {
@@ -192,7 +203,6 @@ body.pg-loaded > .inner {
   border-radius: 0px;
   height: 60px;
 }
-
 
 #transactionsWrapper {
   color: #aaa;
@@ -248,8 +258,7 @@ div.sidebar svg {
 }
 
 .sendWrapper,
-.settingsWrapper
-{
+.settingsWrapper {
   padding: 30px;
 }
 
@@ -299,7 +308,7 @@ div.sidebar svg {
 #valueToSendInfo,
 #feeToPayInfo {
   color: rgb(30, 12, 184);
-  margin-left: 5px;
+  /* margin-left: 5px; */
   margin-right: 5px;
 }
 
@@ -413,6 +422,7 @@ div.noAddressWrapper {
 #sendToAddressName {
   font-size: 95%;
 }
+
 .caret {
   display: inline-block;
   width: 0;
@@ -424,9 +434,12 @@ div.noAddressWrapper {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
 }
-.dropdown, .dropup {
+
+.dropdown,
+.dropup {
   position: relative;
 }
+
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -443,8 +456,34 @@ div.noAddressWrapper {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ccc;
-  border: 1px solid rgba(0,0,0,.15);
+  border: 1px solid rgba(0, 0, 0, .15);
   border-radius: 4px;
   -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
   box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+}
+
+input:not([type]):focus:not([readonly]),
+input[type=text]:not(.browser-default):focus:not([readonly]),
+input[type=password]:not(.browser-default):focus:not([readonly]),
+input[type=email]:not(.browser-default):focus:not([readonly]),
+input[type=url]:not(.browser-default):focus:not([readonly]),
+input[type=time]:not(.browser-default):focus:not([readonly]),
+input[type=date]:not(.browser-default):focus:not([readonly]),
+input[type=datetime]:not(.browser-default):focus:not([readonly]),
+input[type=datetime-local]:not(.browser-default):focus:not([readonly]),
+input[type=tel]:not(.browser-default):focus:not([readonly]),
+input[type=number]:not(.browser-default):focus:not([readonly]),
+input[type=search]:not(.browser-default):focus:not([readonly]),
+textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #57a8e2;
+  -webkit-box-shadow: 0 1px 0 0 #57a8e2;
+  box-shadow: 0 1px 0 0 #57a8e2;
+}
+
+label {
+  color: #57a8e2 !important;
+}
+
+.select-wrapper input.select-dropdown:focus {
+  border-bottom: 1px solid #57a8e2;
 }
