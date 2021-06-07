@@ -202,60 +202,7 @@ $(document).on("render_send", function () {
                 $("#tokenBalance").val(szarBalanceTotal);
             });
         }
-
-        function getFusionBalance(addr42) {
-            var abi = [{
-                "constant": true,
-                "inputs": [{
-                    "name": "_owner",
-                    "type": "address"
-                }],
-                "name": "balanceOf",
-                "outputs": [{
-                    "name": "balance",
-                    "type": "uint256"
-                }],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            }];
-
-            var contract = new web3Local.eth.Contract(abi, "0xc0e4dec1ec422484a02b894997ead8818a955e45");
-            var fusionHolder = addr42;
-            contract.methods.balanceOf(fusionHolder).call().then(function (fusionBalanceTotal) {
-                console.log(parseInt(fusionBalanceTotal));
-                var fusionBalanceFormated = parseFloat(web3Local.utils.fromWei(fusionBalanceTotal, 'ether'));
-                console.log(fusionBalanceFormated);
-                $("#tokenBalance").val(fusionBalanceFormated);
-            });
-        }
-
-        function getBoltBalance(addr42) {
-            var abi = [{
-                "constant": true,
-                "inputs": [{
-                    "name": "_owner",
-                    "type": "address"
-                }],
-                "name": "balanceOf",
-                "outputs": [{
-                    "name": "balance",
-                    "type": "uint256"
-                }],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            }];
-
-            var contract = new web3Local.eth.Contract(abi, "0xc0e4dec1ec422484a02b894997ead8818a955e45");
-            var boltHolder = addr42;
-            contract.methods.balanceOf(boltHolder).call().then(function (boltBalanceTotal) {
-                console.log(parseInt(boltBalanceTotal));
-                var boltBalanceFormated = parseFloat(web3Local.utils.fromWei(boltBalanceTotal, 'ether'));
-                console.log(boltBalanceFormated);
-                $("#tokenBalance").val(boltBalanceFormated);
-            });
-        }
+        
         // getBinarBalance(addr42);
         // console.log(binarTotal);
         var totalAmount = parseFloat(addrValue.trim().substring(45));
@@ -278,12 +225,6 @@ $(document).on("render_send", function () {
             } else if (currencySelected === "SZAR") {
                 console.log("SZAR");
                 getSzarBalance(addr42);
-            } else if (currencySelected === "BOLT") {
-                console.log("BOLT");
-                getBoltBalance(addr42);
-            } else if (currencySelected === "FUSION") {
-                console.log("FUSION");
-                getFusionBalance(addr42);
             }
         });
 
@@ -380,54 +321,106 @@ $(document).on("render_send", function () {
 
                     function doSendTransaction() {
                         $('#dlgSendWalletPassword').iziModal('close');
-
-                        TSFBlockchain.prepareTransaction(
-                            $("#walletPassword").val(),
-                            $("#sendFromAddress").val(),
-                            $("#sendToAddress").val(),
-                            $("#sendAmmount").val(),
-                            function (error) {
-                                TSFMainGUI.showGeneralError(error);
-                            },
-                            function (data) {
-                                TSFBlockchain.sendTransaction(data.raw,
-                                    function (error) {
-                                        TSFMainGUI.showGeneralError(error);
-                                    },
-                                    function (data1) {
-                                        TSFSend.resetSendForm();
-                                        console.log("data1-txhash", data1);
-                                        iziToast.success({
-                                            title: 'Sent',
-                                            message: 'Transaction was successfully sent to the chain',
-                                            position: 'topRight',
-                                            timeout: 5000
-                                        });
-
-                                        TSFBlockchain.getTransaction(data1,
-                                            function (error) {
-                                                TSFMainGUI.showGeneralError(error);
-                                            },
-                                            function (transaction) {
-                                                console.log("transaction", transaction);
-                                                var amount = web3Local.utils.fromWei(transaction.value, 'ether');
-                                                console.log(amount);
-                                                var timeTx = transaction.timestamp;
-                                                console.log(timeTx);
-                                                ipcRenderer.send('storeTransaction', {
-                                                    block: transaction.blockNumber,
-                                                    txhash: transaction.hash.toLowerCase(),
-                                                    fromaddr: transaction.from.toLowerCase(),
-                                                    timestamp: timeTx,
-                                                    toaddr: transaction.to.toLowerCase(),
-                                                    value: amount
-                                                });
-                                            }
-                                        );
-                                    }
-                                );
-                            }
-                        );
+                        const tokenTransaction = false;
+                        if(tokenTransaction) {
+                            const contractAddress = '';
+                            TSFBlockchain.prepareTokenTransaction(
+                                contractAddress,
+                                $("#walletPassword").val(),
+                                $("#sendFromAddress").val(),
+                                $("#sendToAddress").val(),
+                                $("#sendAmmount").val(),
+                                function (error) {
+                                    TSFMainGUI.showGeneralError(error);
+                                },
+                                function (data) {
+                                    TSFBlockchain.sendTransaction(data.raw,
+                                        function (error) {
+                                            TSFMainGUI.showGeneralError(error);
+                                        },
+                                        function (data1) {
+                                            TSFSend.resetSendForm();
+                                            console.log("data1-txhash", data1);
+                                            iziToast.success({
+                                                title: 'Sent',
+                                                message: 'Transaction was successfully sent to the chain',
+                                                position: 'topRight',
+                                                timeout: 5000
+                                            });
+    
+                                            TSFBlockchain.getTransaction(data1,
+                                                function (error) {
+                                                    TSFMainGUI.showGeneralError(error);
+                                                },
+                                                function (transaction) {
+                                                    console.log("transaction", transaction);
+                                                    var amount = web3Local.utils.fromWei(transaction.value, 'ether');
+                                                    console.log(amount);
+                                                    var timeTx = transaction.timestamp;
+                                                    console.log(timeTx);
+                                                    ipcRenderer.send('storeTransaction', {
+                                                        block: transaction.blockNumber,
+                                                        txhash: transaction.hash.toLowerCase(),
+                                                        fromaddr: transaction.from.toLowerCase(),
+                                                        timestamp: timeTx,
+                                                        toaddr: transaction.to.toLowerCase(),
+                                                        value: amount
+                                                    });
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+                        } else {
+                            TSFBlockchain.prepareTransaction(
+                                $("#walletPassword").val(),
+                                $("#sendFromAddress").val(),
+                                $("#sendToAddress").val(),
+                                $("#sendAmmount").val(),
+                                function (error) {
+                                    TSFMainGUI.showGeneralError(error);
+                                },
+                                function (data) {
+                                    TSFBlockchain.sendTransaction(data.raw,
+                                        function (error) {
+                                            TSFMainGUI.showGeneralError(error);
+                                        },
+                                        function (data1) {
+                                            TSFSend.resetSendForm();
+                                            console.log("data1-txhash", data1);
+                                            iziToast.success({
+                                                title: 'Sent',
+                                                message: 'Transaction was successfully sent to the chain',
+                                                position: 'topRight',
+                                                timeout: 5000
+                                            });
+    
+                                            TSFBlockchain.getTransaction(data1,
+                                                function (error) {
+                                                    TSFMainGUI.showGeneralError(error);
+                                                },
+                                                function (transaction) {
+                                                    console.log("transaction", transaction);
+                                                    var amount = web3Local.utils.fromWei(transaction.value, 'ether');
+                                                    console.log(amount);
+                                                    var timeTx = transaction.timestamp;
+                                                    console.log(timeTx);
+                                                    ipcRenderer.send('storeTransaction', {
+                                                        block: transaction.blockNumber,
+                                                        txhash: transaction.hash.toLowerCase(),
+                                                        fromaddr: transaction.from.toLowerCase(),
+                                                        timestamp: timeTx,
+                                                        toaddr: transaction.to.toLowerCase(),
+                                                        value: amount
+                                                    });
+                                                }
+                                            );
+                                        }
+                                    );
+                                }
+                            );
+                        }
                     }
 
                     $("#btnSendWalletPasswordConfirm").off('click').on('click', function () {

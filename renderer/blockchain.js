@@ -72,6 +72,70 @@ class Blockchain {
         });
     }
 
+    prepareTokenTransaction(contractAddress ="0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A", password, fromAddress, toAddress, value, clbError, clbSuccess,) {
+        web3Local.eth.personal.unlockAccount(fromAddress, password, function( error, result ) {
+            if (error) {
+                clbError("Wrong password for the selected address!");
+            } else
+            {
+                web3Local.eth.getTransactionCount(fromAddress, 'pending', function( error, result ) {
+                    if (error) {
+                        clbError(error);
+                    } else {
+                        var amountToSend = web3Local.utils.toWei(value, "ether"); //convert to wei value
+                        var abi = [{
+                            "constant": true,
+                            "inputs": [{
+                                "name": "_owner",
+                                "type": "address"
+                            }],
+                            "name": "balanceOf",
+                            "outputs": [{
+                                "name": "balance",
+                                "type": "uint256"
+                            }],
+                            "payable": false,
+                            "stateMutability": "view",
+                            "type": "function"
+                        }];
+            
+                        // var contract = new web3Local.eth.Contract(abi, "0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
+                        let myContract = new web3Local.eth.Contract(abi, contractAddress);
+                        let data = myContract.methods.transfer(toAddress, amountToSend).encodeABI();
+                        var RawTransaction = {
+                            from: fromAddress,
+                            to: toAddress,
+                            value: "0x00",
+                            nonce: result,
+                            data: data
+                        };
+
+                        web3Local.eth.estimateGas(RawTransaction, function( error, result ) {
+                            if (error) {
+                                clbError(error);
+                            } else {
+                                RawTransaction.gas = result + 1;
+                                web3Local.eth.getGasPrice(function( error, result ) {
+                                    if (error) {
+                                        clbError(error);
+                                    } else {
+                                        RawTransaction.gasPrice = result;
+                                        web3Local.eth.signTransaction(RawTransaction, fromAddress, function( error, result ) {
+                                            if (error) {
+                                                clbError(error);
+                                            } else {
+                                                clbSuccess(result);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
     prepareTransaction(password, fromAddress, toAddress, value, clbError, clbSuccess) {
         web3Local.eth.personal.unlockAccount(fromAddress, password, function( error, result ) {
             if (error) {
