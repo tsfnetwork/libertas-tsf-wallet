@@ -72,7 +72,7 @@ class Blockchain {
         });
     }
 
-    prepareTokenTransaction(contractAddress ="0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A", password, fromAddress, toAddress, value, clbError, clbSuccess,) {
+    prepareTokenTransaction(contractAddress, password, fromAddress, toAddress, value, clbError, clbSuccess,) {
         web3Local.eth.personal.unlockAccount(fromAddress, password, function( error, result ) {
             if (error) {
                 clbError("Wrong password for the selected address!");
@@ -82,34 +82,246 @@ class Blockchain {
                     if (error) {
                         clbError(error);
                     } else {
-                        var amountToSend = web3Local.utils.toWei(value, "ether"); //convert to wei value
-                        var abi = [{
-                            "constant": true,
-                            "inputs": [{
-                                "name": "_owner",
-                                "type": "address"
-                            }],
-                            "name": "balanceOf",
-                            "outputs": [{
-                                "name": "balance",
-                                "type": "uint256"
-                            }],
-                            "payable": false,
-                            "stateMutability": "view",
-                            "type": "function"
-                        }];
+                        // var amountToSend = web3Local.utils.toWei(value, "ether"); //convert to wei value
+                        var amountToSend = value;
+                        console.log(amountToSend);
+                        var abi = [
+                            {
+                                "constant": true,
+                                "inputs": [],
+                                "name": "name",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "string"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": false,
+                                "inputs": [
+                                    {
+                                        "name": "_spender",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "name": "_value",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "name": "approve",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "bool"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "nonpayable",
+                                "type": "function"
+                            },
+                            {
+                                "constant": true,
+                                "inputs": [],
+                                "name": "totalSupply",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": false,
+                                "inputs": [
+                                    {
+                                        "name": "_from",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "name": "_to",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "name": "_value",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "name": "transferFrom",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "bool"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "nonpayable",
+                                "type": "function"
+                            },
+                            {
+                                "constant": true,
+                                "inputs": [],
+                                "name": "decimals",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "uint8"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": true,
+                                "inputs": [
+                                    {
+                                        "name": "_owner",
+                                        "type": "address"
+                                    }
+                                ],
+                                "name": "balanceOf",
+                                "outputs": [
+                                    {
+                                        "name": "balance",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": true,
+                                "inputs": [],
+                                "name": "symbol",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "string"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "constant": false,
+                                "inputs": [
+                                    {
+                                        "name": "_to",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "name": "_value",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "name": "transfer",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "bool"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "nonpayable",
+                                "type": "function"
+                            },
+                            {
+                                "constant": true,
+                                "inputs": [
+                                    {
+                                        "name": "_owner",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "name": "_spender",
+                                        "type": "address"
+                                    }
+                                ],
+                                "name": "allowance",
+                                "outputs": [
+                                    {
+                                        "name": "",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "payable": false,
+                                "stateMutability": "view",
+                                "type": "function"
+                            },
+                            {
+                                "payable": true,
+                                "stateMutability": "payable",
+                                "type": "fallback"
+                            },
+                            {
+                                "anonymous": false,
+                                "inputs": [
+                                    {
+                                        "indexed": true,
+                                        "name": "owner",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "indexed": true,
+                                        "name": "spender",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "indexed": false,
+                                        "name": "value",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "name": "Approval",
+                                "type": "event"
+                            },
+                            {
+                                "anonymous": false,
+                                "inputs": [
+                                    {
+                                        "indexed": true,
+                                        "name": "from",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "indexed": true,
+                                        "name": "to",
+                                        "type": "address"
+                                    },
+                                    {
+                                        "indexed": false,
+                                        "name": "value",
+                                        "type": "uint256"
+                                    }
+                                ],
+                                "name": "Transfer",
+                                "type": "event"
+                            }
+                        ];
             
-                        // var contract = new web3Local.eth.Contract(abi, "0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
                         let myContract = new web3Local.eth.Contract(abi, contractAddress);
+                        console.log(myContract);
                         let data = myContract.methods.transfer(toAddress, amountToSend).encodeABI();
+                        console.log("data", data);
                         var RawTransaction = {
+                            nonce: web3Local.utils.toHex(result),
+                            gasPrice: "0x3b9aca00",
+                            gasLimit: web3Local.utils.toHex(200000),
                             from: fromAddress,
-                            to: toAddress,
+                            to: contractAddress,
                             value: "0x00",
-                            nonce: result,
                             data: data
                         };
-
+                        console.log(RawTransaction);
                         web3Local.eth.estimateGas(RawTransaction, function( error, result ) {
                             if (error) {
                                 clbError(error);
@@ -212,6 +424,7 @@ class Blockchain {
                 var addressInfo = {};
                 addressInfo.balance = 0;
                 addressInfo.binarBalance = 0;
+                addressInfo.szarBalance = 0;
                 addressInfo.address = res[i];
                 addressInfo.name = walletName;
                 rendererData.addressData.push(addressInfo);
@@ -231,11 +444,12 @@ class Blockchain {
           web3Local.eth.getBalance(rendererData.addressData[index].address, function(error, balance) {
             rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, 'ether')).toFixed(2);
             rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, 'ether'));
+            updateBinarBalance(counter);
+            updateSzarBalance(counter);
 
             if (counter < rendererData.addressData.length - 1) {
               counter++;
               updateBalance(counter);
-              updateBinarBalance(counter);
             } else {
               rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
               clbSuccess(rendererData);
@@ -259,34 +473,36 @@ class Blockchain {
                 "stateMutability": "view",
                 "type": "function"
             }];
-            // var contract = web3Local.eth.contract(abi).at("0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
             var contract = new web3Local.eth.Contract(abi, "0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
-            // var binarHolder = "0x3B4038E6B1B928DC663a37aA6BFf801373be6fC3";
             var binarHolder = rendererData.addressData[index].address;
-            // contract.balanceOf(binarHolder, (error, binarBalance) => {
-            //     contract.decimals((error, decimals) => {
-            //         // calculate a balance
-            //         binarBalance = balance.div(10**decimals);
-            //         console.log(binarBalance.toString());
-            //     });
-            // })
             contract.methods.balanceOf(binarHolder).call().then(function (binarBalance) {
                 rendererData.addressData[index].binarBalance = binarBalance;
                 console.log(binarBalance);
             });
-            
-            // web3Local.eth.getBalance(rendererData.addressData[index].address, function(error, binarBalance) {
-            //     rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, 'ether')).toFixed(2);
-            //     rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, 'ether'));
-
-            //     if (counter < rendererData.addressData.length - 1) {
-            //     counter++;
-            //     updateBalance(counter);
-            //     } else {
-            //     rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
-            //     clbSuccess(rendererData);
-            //     }
-            // });
+        }
+        function updateSzarBalance(index)
+        {
+            var abi = [{
+                "constant": true,
+                "inputs": [{
+                    "name": "_owner",
+                    "type": "address"
+                }],
+                "name": "balanceOf",
+                "outputs": [{
+                    "name": "balance",
+                    "type": "uint256"
+                }],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            }];
+            var contract = new web3Local.eth.Contract(abi, "0x16545038bffb6604a1113198d93b31fc72fb2d76");
+            var szarHolder = rendererData.addressData[index].address;
+            contract.methods.balanceOf(szarHolder).call().then(function (szarBalance) {
+                rendererData.addressData[index].szarBalance = szarBalance;
+                console.log(szarBalance);
+            });
         }
     }
 
@@ -327,12 +543,6 @@ class Blockchain {
             }
         });
     }
-
-    // importFromPrivateKey(privateKey, password) {
-    //     web3Local.eth.accounts.wallet.clear();
-    //     web3Local.eth.accounts.wallet.add(privateKey);
-    //     return web3Local.eth.accounts.wallet.encrypt('123456789');
-    // }
 
     importFromPrivateKey(privateKey, keyPassword, clbError, clbSuccess) {
         web3Local.eth.personal.importRawKey(privateKey, keyPassword, function(error, account) {
