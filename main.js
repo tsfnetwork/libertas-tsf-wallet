@@ -16,8 +16,8 @@ locker.lock().then(function() {
     mainWindow = new BrowserWindow({
       width: 1200,
       height: 800,
-      minWidth: 1100,
-      minHeight: 700,
+      minWidth: 1000,
+      minHeight: 650,
       backgroundColor: "#000000",
       icon: 'assets/images/brand-logo-icon.png'
     });

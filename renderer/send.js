@@ -172,7 +172,7 @@ $(document).on("render_send", function () {
                 "type": "function"
             }];
 
-            var contract = new web3Local.eth.Contract(abi, "0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
+            var contract = new web3Local.eth.Contract(abi, "0x5157adC7156984520F2Aeb94247E6268f3091b6B");
             var binarHolder = addr42;
             contract.methods.balanceOf(binarHolder).call().then(function (binarBalanceTotal) {
                 console.log(parseInt(binarBalanceTotal));
@@ -197,7 +197,7 @@ $(document).on("render_send", function () {
                 "type": "function"
             }];
 
-            var contract = new web3Local.eth.Contract(abi, "0x16545038bffb6604a1113198d93b31fc72fb2d76");
+            var contract = new web3Local.eth.Contract(abi, "0x52CD8E72B438E362F0235080DD63EDb61B740656");
             var szarHolder = addr42;
             contract.methods.balanceOf(szarHolder).call().then(function (szarBalanceTotal) {
                 console.log(parseInt(szarBalanceTotal));
@@ -318,11 +318,11 @@ $(document).on("render_send", function () {
             } else if (token === "BINAR") {
                 console.log("BINAR");
                 tokenTransaction = true;
-                contractAddress = '0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A';
+                contractAddress = '0x5157adC7156984520F2Aeb94247E6268f3091b6B';
             } else if (token === "SZAR") {
                 console.log("SZAR");
                 tokenTransaction = true;
-                contractAddress = '0x16545038bffb6604a1113198d93b31fc72fb2d76';
+                contractAddress = '0x52CD8E72B438E362F0235080DD63EDb61B740656';
             }
             console.log(tokenTransaction);
             TSFBlockchain.getTranasctionFee($("#sendFromAddress").val(), contractAddress, $("#sendAmmount").val(),

@@ -473,7 +473,7 @@ class Blockchain {
                 "stateMutability": "view",
                 "type": "function"
             }];
-            var contract = new web3Local.eth.Contract(abi, "0x407DC4E7D7b861CFe2122C34e6c8e7437F24ff9A");
+            var contract = new web3Local.eth.Contract(abi, "0x5157adC7156984520F2Aeb94247E6268f3091b6B");
             var binarHolder = rendererData.addressData[index].address;
             contract.methods.balanceOf(binarHolder).call().then(function (binarBalance) {
                 rendererData.addressData[index].binarBalance = binarBalance;
@@ -497,7 +497,7 @@ class Blockchain {
                 "stateMutability": "view",
                 "type": "function"
             }];
-            var contract = new web3Local.eth.Contract(abi, "0x16545038bffb6604a1113198d93b31fc72fb2d76");
+            var contract = new web3Local.eth.Contract(abi, "0x52CD8E72B438E362F0235080DD63EDb61B740656");
             var szarHolder = rendererData.addressData[index].address;
             contract.methods.balanceOf(szarHolder).call().then(function (szarBalance) {
                 rendererData.addressData[index].szarBalance = szarBalance;
