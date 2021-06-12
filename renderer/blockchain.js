@@ -1,5 +1,7 @@
 // In renderer process (web page).
-const {ipcRenderer} = require('electron');
+const {
+    ipcRenderer
+} = require('electron');
 
 class Blockchain {
     constructor() {
@@ -8,7 +10,7 @@ class Blockchain {
     }
 
     getBlock(blockToGet, includeData, clbError, clbSuccess) {
-        web3Local.eth.getBlock(blockToGet, includeData, function(error, block) {
+        web3Local.eth.getBlock(blockToGet, includeData, function (error, block) {
             if (error) {
                 clbError(error);
             } else {
@@ -18,7 +20,7 @@ class Blockchain {
     }
 
     getAccounts(clbError, clbSuccess) {
-        web3Local.eth.getAccounts(function(err, res) {
+        web3Local.eth.getAccounts(function (err, res) {
             if (err) {
                 clbError(err);
             } else {
@@ -32,7 +34,7 @@ class Blockchain {
     }
 
     getTransaction(thxid, clbError, clbSuccess) {
-        web3Local.eth.getTransaction(thxid, function( error, result ) {
+        web3Local.eth.getTransaction(thxid, function (error, result) {
             if (error) {
                 clbError(error);
             } else {
@@ -42,7 +44,7 @@ class Blockchain {
     }
 
     getTranasctionFee(fromAddress, toAddress, value, clbError, clbSuccess) {
-        web3Local.eth.getTransactionCount(fromAddress, function( error, result ) {
+        web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
             if (error) {
                 clbError(error);
             } else {
@@ -54,12 +56,12 @@ class Blockchain {
                     nonce: result
                 };
 
-                web3Local.eth.estimateGas(RawTransaction, function( error, result ) {
+                web3Local.eth.estimateGas(RawTransaction, function (error, result) {
                     if (error) {
                         clbError(error);
                     } else {
                         var usedGas = result + 1;
-                        web3Local.eth.getGasPrice(function( error, result ) {
+                        web3Local.eth.getGasPrice(function (error, result) {
                             if (error) {
                                 clbError(error);
                             } else {
@@ -72,38 +74,33 @@ class Blockchain {
         });
     }
 
-    prepareTokenTransaction(contractAddress, password, fromAddress, toAddress, value, clbError, clbSuccess,) {
-        web3Local.eth.personal.unlockAccount(fromAddress, password, function( error, result ) {
+    prepareTokenTransaction(contractAddress, password, fromAddress, toAddress, value, clbError, clbSuccess, ) {
+        web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
             if (error) {
                 clbError("Wrong password for the selected address!");
-            } else
-            {
-                web3Local.eth.getTransactionCount(fromAddress, 'pending', function( error, result ) {
+            } else {
+                web3Local.eth.getTransactionCount(fromAddress, 'pending', function (error, result) {
                     if (error) {
                         clbError(error);
                     } else {
                         // var amountToSend = web3Local.utils.toWei(value, "ether"); //convert to wei value
                         var amountToSend = value;
                         console.log(amountToSend);
-                        var abi = [
-                            {
+                        var abi = [{
                                 "constant": true,
                                 "inputs": [],
                                 "name": "name",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "string"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "string"
+                                }],
                                 "payable": false,
                                 "stateMutability": "view",
                                 "type": "function"
                             },
                             {
                                 "constant": false,
-                                "inputs": [
-                                    {
+                                "inputs": [{
                                         "name": "_spender",
                                         "type": "address"
                                     },
@@ -113,12 +110,10 @@ class Blockchain {
                                     }
                                 ],
                                 "name": "approve",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "bool"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "bool"
+                                }],
                                 "payable": false,
                                 "stateMutability": "nonpayable",
                                 "type": "function"
@@ -127,20 +122,17 @@ class Blockchain {
                                 "constant": true,
                                 "inputs": [],
                                 "name": "totalSupply",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "uint256"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "uint256"
+                                }],
                                 "payable": false,
                                 "stateMutability": "view",
                                 "type": "function"
                             },
                             {
                                 "constant": false,
-                                "inputs": [
-                                    {
+                                "inputs": [{
                                         "name": "_from",
                                         "type": "address"
                                     },
@@ -154,12 +146,10 @@ class Blockchain {
                                     }
                                 ],
                                 "name": "transferFrom",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "bool"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "bool"
+                                }],
                                 "payable": false,
                                 "stateMutability": "nonpayable",
                                 "type": "function"
@@ -168,31 +158,25 @@ class Blockchain {
                                 "constant": true,
                                 "inputs": [],
                                 "name": "decimals",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "uint8"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "uint8"
+                                }],
                                 "payable": false,
                                 "stateMutability": "view",
                                 "type": "function"
                             },
                             {
                                 "constant": true,
-                                "inputs": [
-                                    {
-                                        "name": "_owner",
-                                        "type": "address"
-                                    }
-                                ],
+                                "inputs": [{
+                                    "name": "_owner",
+                                    "type": "address"
+                                }],
                                 "name": "balanceOf",
-                                "outputs": [
-                                    {
-                                        "name": "balance",
-                                        "type": "uint256"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "balance",
+                                    "type": "uint256"
+                                }],
                                 "payable": false,
                                 "stateMutability": "view",
                                 "type": "function"
@@ -201,20 +185,17 @@ class Blockchain {
                                 "constant": true,
                                 "inputs": [],
                                 "name": "symbol",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "string"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "string"
+                                }],
                                 "payable": false,
                                 "stateMutability": "view",
                                 "type": "function"
                             },
                             {
                                 "constant": false,
-                                "inputs": [
-                                    {
+                                "inputs": [{
                                         "name": "_to",
                                         "type": "address"
                                     },
@@ -224,20 +205,17 @@ class Blockchain {
                                     }
                                 ],
                                 "name": "transfer",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "bool"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "bool"
+                                }],
                                 "payable": false,
                                 "stateMutability": "nonpayable",
                                 "type": "function"
                             },
                             {
                                 "constant": true,
-                                "inputs": [
-                                    {
+                                "inputs": [{
                                         "name": "_owner",
                                         "type": "address"
                                     },
@@ -247,12 +225,10 @@ class Blockchain {
                                     }
                                 ],
                                 "name": "allowance",
-                                "outputs": [
-                                    {
-                                        "name": "",
-                                        "type": "uint256"
-                                    }
-                                ],
+                                "outputs": [{
+                                    "name": "",
+                                    "type": "uint256"
+                                }],
                                 "payable": false,
                                 "stateMutability": "view",
                                 "type": "function"
@@ -264,8 +240,7 @@ class Blockchain {
                             },
                             {
                                 "anonymous": false,
-                                "inputs": [
-                                    {
+                                "inputs": [{
                                         "indexed": true,
                                         "name": "owner",
                                         "type": "address"
@@ -286,8 +261,7 @@ class Blockchain {
                             },
                             {
                                 "anonymous": false,
-                                "inputs": [
-                                    {
+                                "inputs": [{
                                         "indexed": true,
                                         "name": "from",
                                         "type": "address"
@@ -307,7 +281,7 @@ class Blockchain {
                                 "type": "event"
                             }
                         ];
-            
+
                         let myContract = new web3Local.eth.Contract(abi, contractAddress);
                         console.log(myContract);
                         let data = myContract.methods.transfer(toAddress, amountToSend).encodeABI();
@@ -322,17 +296,17 @@ class Blockchain {
                             data: data
                         };
                         console.log(RawTransaction);
-                        web3Local.eth.estimateGas(RawTransaction, function( error, result ) {
+                        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
                             if (error) {
                                 clbError(error);
                             } else {
                                 RawTransaction.gas = result + 1;
-                                web3Local.eth.getGasPrice(function( error, result ) {
+                                web3Local.eth.getGasPrice(function (error, result) {
                                     if (error) {
                                         clbError(error);
                                     } else {
                                         RawTransaction.gasPrice = result;
-                                        web3Local.eth.signTransaction(RawTransaction, fromAddress, function( error, result ) {
+                                        web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
                                             if (error) {
                                                 clbError(error);
                                             } else {
@@ -349,12 +323,11 @@ class Blockchain {
         });
     }
     prepareTransaction(password, fromAddress, toAddress, value, clbError, clbSuccess) {
-        web3Local.eth.personal.unlockAccount(fromAddress, password, function( error, result ) {
+        web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
             if (error) {
                 clbError("Wrong password for the selected address!");
-            } else
-            {
-                web3Local.eth.getTransactionCount(fromAddress, 'pending', function( error, result ) {
+            } else {
+                web3Local.eth.getTransactionCount(fromAddress, 'pending', function (error, result) {
                     if (error) {
                         clbError(error);
                     } else {
@@ -366,17 +339,17 @@ class Blockchain {
                             nonce: result
                         };
 
-                        web3Local.eth.estimateGas(RawTransaction, function( error, result ) {
+                        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
                             if (error) {
                                 clbError(error);
                             } else {
                                 RawTransaction.gas = result + 1;
-                                web3Local.eth.getGasPrice(function( error, result ) {
+                                web3Local.eth.getGasPrice(function (error, result) {
                                     if (error) {
                                         clbError(error);
                                     } else {
                                         RawTransaction.gasPrice = result;
-                                        web3Local.eth.signTransaction(RawTransaction, fromAddress, function( error, result ) {
+                                        web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
                                             if (error) {
                                                 clbError(error);
                                             } else {
@@ -394,7 +367,7 @@ class Blockchain {
     }
 
     sendTransaction(rawTransaction, clbError, clbSuccess) {
-        web3Local.eth.sendSignedTransaction(rawTransaction, function( error, result ) {
+        web3Local.eth.sendSignedTransaction(rawTransaction, function (error, result) {
             if (error) {
                 clbError(error);
             } else {
@@ -411,53 +384,52 @@ class Blockchain {
         var wallets = TSFDatatabse.getWallets();
         var counter = 0;
 
-        web3Local.eth.getAccounts(function(err, res) {
-          if (err) {
-            clbError(err);
-          } else {
-            for (var i = 0; i < res.length; i++) {
-                var walletName =  vsprintf("Account %d", [i + 1]);
-                if (wallets) {
-                  walletName = wallets.names[res[i]] || walletName;
+        web3Local.eth.getAccounts(function (err, res) {
+            if (err) {
+                clbError(err);
+            } else {
+                for (var i = 0; i < res.length; i++) {
+                    var walletName = vsprintf("Account %d", [i + 1]);
+                    if (wallets) {
+                        walletName = wallets.names[res[i]] || walletName;
+                    }
+
+                    var addressInfo = {};
+                    addressInfo.balance = 0;
+                    addressInfo.binarBalance = 0;
+                    addressInfo.szarBalance = 0;
+                    addressInfo.address = res[i];
+                    addressInfo.name = walletName;
+                    rendererData.addressData.push(addressInfo);
                 }
 
-                var addressInfo = {};
-                addressInfo.balance = 0;
-                addressInfo.binarBalance = 0;
-                addressInfo.szarBalance = 0;
-                addressInfo.address = res[i];
-                addressInfo.name = walletName;
-                rendererData.addressData.push(addressInfo);
-              }
-
-              if (rendererData.addressData.length > 0) {
-                updateBalance(counter);
-                updateBinarBalance(counter);
-              } else {
-                clbSuccess(rendererData);
-              }
-          }
+                if (rendererData.addressData.length > 0) {
+                    updateBalance(counter);
+                    updateBinarBalance(counter);
+                } else {
+                    clbSuccess(rendererData);
+                }
+            }
         });
 
-        function updateBalance(index)
-        {
-          web3Local.eth.getBalance(rendererData.addressData[index].address, function(error, balance) {
-            rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, 'ether')).toFixed(2);
-            rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, 'ether'));
-            updateBinarBalance(counter);
-            updateSzarBalance(counter);
+        function updateBalance(index) {
+            web3Local.eth.getBalance(rendererData.addressData[index].address, function (error, balance) {
+                rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, 'ether')).toFixed(2);
+                rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, 'ether'));
+                updateBinarBalance(counter);
+                updateSzarBalance(counter);
 
-            if (counter < rendererData.addressData.length - 1) {
-              counter++;
-              updateBalance(counter);
-            } else {
-              rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
-              clbSuccess(rendererData);
-            }
-          });
+                if (counter < rendererData.addressData.length - 1) {
+                    counter++;
+                    updateBalance(counter);
+                } else {
+                    rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
+                    clbSuccess(rendererData);
+                }
+            });
         }
-        function updateBinarBalance(index)
-        {
+
+        function updateBinarBalance(index) {
             var abi = [{
                 "constant": true,
                 "inputs": [{
@@ -477,11 +449,10 @@ class Blockchain {
             var binarHolder = rendererData.addressData[index].address;
             contract.methods.balanceOf(binarHolder).call().then(function (binarBalance) {
                 rendererData.addressData[index].binarBalance = binarBalance;
-                console.log(binarBalance);
             });
         }
-        function updateSzarBalance(index)
-        {
+
+        function updateSzarBalance(index) {
             var abi = [{
                 "constant": true,
                 "inputs": [{
@@ -501,7 +472,6 @@ class Blockchain {
             var szarHolder = rendererData.addressData[index].address;
             contract.methods.balanceOf(szarHolder).call().then(function (szarBalance) {
                 rendererData.addressData[index].szarBalance = szarBalance;
-                console.log(szarBalance);
             });
         }
     }
@@ -513,55 +483,55 @@ class Blockchain {
         var wallets = TSFDatatabse.getWallets();
         var counter = 0;
 
-        web3Local.eth.getAccounts(function(err, res) {
-          if (err) {
-            clbError(err);
-          } else {
-            for (var i = 0; i < res.length; i++) {
-                var walletName =  vsprintf("Account %d", [i + 1]);
-                if (wallets) {
-                  walletName = wallets.names[res[i]] || walletName;
+        web3Local.eth.getAccounts(function (err, res) {
+            if (err) {
+                clbError(err);
+            } else {
+                for (var i = 0; i < res.length; i++) {
+                    var walletName = vsprintf("Account %d", [i + 1]);
+                    if (wallets) {
+                        walletName = wallets.names[res[i]] || walletName;
+                    }
+
+                    var addressInfo = {};
+                    addressInfo.address = res[i];
+                    addressInfo.name = walletName;
+                    rendererData.addressData.push(addressInfo);
                 }
 
-                var addressInfo = {};
-                addressInfo.address = res[i];
-                addressInfo.name = walletName;
-                rendererData.addressData.push(addressInfo);
+                clbSuccess(rendererData);
             }
-
-            clbSuccess(rendererData);
-          }
         });
     }
 
     createNewAccount(password, clbError, clbSuccess) {
-        web3Local.eth.personal.newAccount(password, function(error, account) {
+        web3Local.eth.personal.newAccount(password, function (error, account) {
             if (error) {
                 clbError(error);
             } else {
-              clbSuccess(account);
+                clbSuccess(account);
             }
         });
     }
 
     importFromPrivateKey(privateKey, keyPassword, clbError, clbSuccess) {
-        web3Local.eth.personal.importRawKey(privateKey, keyPassword, function(error, account) {
-          if (error) {
-            clbError(error);
-          } else {
-            clbSuccess(account);
-          }
+        web3Local.eth.personal.importRawKey(privateKey, keyPassword, function (error, account) {
+            if (error) {
+                clbError(error);
+            } else {
+                clbSuccess(account);
+            }
         });
     }
 
     subsribePendingTransactions(clbError, clbSuccess, clbData) {
-        this.txSubscribe = web3Local.eth.subscribe('pendingTransactions', function(error, result){
+        this.txSubscribe = web3Local.eth.subscribe('pendingTransactions', function (error, result) {
             if (error) {
                 clbError(error);
             } else {
                 clbSuccess(result);
             }
-        }).on("data", function(transaction){
+        }).on("data", function (transaction) {
             if (clbData) {
                 clbData(transaction);
             }
@@ -570,24 +540,24 @@ class Blockchain {
 
     unsubsribePendingTransactions(clbError, clbSuccess) {
         if (this.txSubscribe) {
-            this.txSubscribe.unsubscribe(function(error, success){
-                if(error) {
+            this.txSubscribe.unsubscribe(function (error, success) {
+                if (error) {
                     clbError(error);
                 } else {
-                    clbSuccess(success) ;
+                    clbSuccess(success);
                 }
             });
         }
     }
 
     subsribeNewBlockHeaders(clbError, clbSuccess, clbData) {
-        this.bhSubscribe = web3Local.eth.subscribe('newBlockHeaders', function(error, result){
+        this.bhSubscribe = web3Local.eth.subscribe('newBlockHeaders', function (error, result) {
             if (error) {
                 clbError(error);
             } else {
                 clbSuccess(result);
             }
-        }).on("data", function(blockHeader){
+        }).on("data", function (blockHeader) {
             if (clbData) {
                 clbData(blockHeader);
             }
@@ -596,11 +566,11 @@ class Blockchain {
 
     unsubsribeNewBlockHeaders(clbError, clbSuccess) {
         if (this.bhSubscribe) {
-            this.bhSubscribe.unsubscribe(function(error, success){
-                if(error) {
+            this.bhSubscribe.unsubscribe(function (error, success) {
+                if (error) {
                     clbError(error);
                 } else {
-                    clbSuccess(success) ;
+                    clbSuccess(success);
                 }
             });
         }

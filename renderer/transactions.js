@@ -1,4 +1,6 @@
-const {ipcRenderer} = require('electron');
+const {
+    ipcRenderer
+} = require('electron');
 
 class Transactions {
     constructor() {
@@ -38,21 +40,17 @@ class Transactions {
     // syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter) {
     syncTransactionsForSingleAddress(addressList, counters, counter) {
         if (counter < addressList.length) {
-            // SyncProgress.setText(vsprintf("Syncing address transactions %d/%d, please wait...", [counter, addressList.length]));
             SyncProgress.setText(vsprintf("Syncing address transactions %d/%d, please wait...", [counter, addressList.length]));
 
             var startBlock = parseInt(counters.transactions) || 0;
             // var params = vsprintf('?address=%s&fromBlock=%d&toBlock=%d', [addressList[counter].toLowerCase(), startBlock, lastBlock]);
             var params = vsprintf('%s', [addressList[counter].toLowerCase()]);
 
-            $.getJSON("https://explorer.tsf-platform.com/api/v1/address/tx/" + params + "/10/1",  function( result ) {
-                console.log(result);
+            $.getJSON("https://explorer.tsf-platform.com/api/v1/address/tx/" + params + "/10/1", function (result) {
                 result.forEach(element => {
                     var amount = parseFloat(element.value);
-                    console.log("amount", amount);
                     var timeS = element.timestamp;
-                    console.log("timestamp", timeS);
-                     if (element.from && element.to) {
+                    if (element.from && element.to) {
                         ipcRenderer.send('storeTransaction', {
                             block: element.blockNumber.toString(),
                             txhash: element.hash.toLowerCase(),
@@ -65,12 +63,10 @@ class Transactions {
                 });
 
                 // call the transaction sync for the next address
-                // TSFTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
                 TSFTransactions.syncTransactionsForSingleAddress(addressList, counters, counter + 1);
             });
         } else {
             // update the counter and store it back to file system
-
             // counters.transactions = lastBlock;
             TSFDatatabse.setCounters(counters);
 
@@ -84,12 +80,11 @@ class Transactions {
         var counter = 0;
 
         TSFBlockchain.getAccounts(
-            function(error) {
+            function (error) {
                 TSFMainGUI.showGeneralError(error);
             },
-            function(data) {
+            function (data) {
                 TSFTransactions.setIsSyncing(true);
-                // TSFTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock, counter);
                 TSFTransactions.syncTransactionsForSingleAddress(data, counters, counter);
             }
         );
@@ -108,7 +103,7 @@ class Transactions {
                 var dataTransactions = ipcRenderer.sendSync('getTransactions');
                 var addressList = TSFWallets.getAddressList();
 
-                dataTransactions.forEach(function(element) {
+                dataTransactions.forEach(function (element) {
                     var isFromValid = (addressList.indexOf(element[2].toLowerCase()) > -1);
                     var isToValid = (addressList.indexOf(element[3].toLowerCase()) > -1);
 
@@ -129,19 +124,18 @@ class Transactions {
 
     enableKeepInSync() {
         TSFBlockchain.subsribeNewBlockHeaders(
-            function(error) {
+            function (error) {
                 TSFMainGUI.showGeneralError(error);
             },
-            function(data)
-            {
+            function (data) {
                 TSFBlockchain.getBlock(data.number, true,
-                    function(error) {
+                    function (error) {
                         TSFMainGUI.showGeneralError(error);
                     },
-                    function(data) {
+                    function (data) {
                         if (data.transactions) {
                             data.transactions.forEach(element => {
-                                
+
                                 if (element.from && element.to) {
                                     if ((TSFWallets.getAddressExists(element.from)) || (TSFWallets.getAddressExists(element.to))) {
                                         console.log(element);
@@ -151,14 +145,11 @@ class Transactions {
                                             block: element.blockNumber.toString(),
                                             txhash: element.hash.toLowerCase(),
                                             fromaddr: element.from.toLowerCase(),
-                                            // timestamp: moment(element.timestamp).format("DD MMM YYYY[\r\n]hh:mm a"),
                                             timestamp: moment(element.timestamp).format("DD MMM YYYY[\r\n]hh:mm a"),
                                             toaddr: element.to.toLowerCase(),
                                             value: amountInEther
-                                            // value: Number(element.value).toFixed(3).toString().replace('+','')
                                         }
                                         console.log(Transaction);
-
                                         // store transaction and notify about new transactions
                                         ipcRenderer.send('storeTransaction', Transaction);
                                         $(document).trigger("onNewAccountTransaction");
@@ -171,7 +162,7 @@ class Transactions {
                                         });
 
                                         if (TSFMainGUI.getAppState() == "transactions") {
-                                            setTimeout(function() {
+                                            setTimeout(function () {
                                                 TSFTransactions.renderTransactions();
                                             }, 500);
                                         }
@@ -187,10 +178,10 @@ class Transactions {
 
     disableKeepInSync() {
         TSFBlockchain.unsubsribeNewBlockHeaders(
-            function(error) {
+            function (error) {
                 TSFMainGUI.showGeneralError(error);
             },
-            function(data) {
+            function (data) {
                 // success
             }
         );
