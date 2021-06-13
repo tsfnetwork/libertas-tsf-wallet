@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "build --dir",
+    "linux": "build --linux",
     "dist": "build",
     "installer": "electron-installer-windows --src dist/win-unpacked/ --dest dist/installers/ --config config.json"
   },
@@ -30,7 +31,7 @@
     "asar": true,
     "linux": {
       "target": "tar.gz",
-      "icon": "build/icon.icns",
+      "icon": "assets/images/Opus1024.png",
       "artifactName": "Linux-${productName}-${version}.${ext}",
       "extraResources": [
         "bin/linux/*"
