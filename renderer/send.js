@@ -27,7 +27,6 @@ class SendTransaction {
     validateSendForm() {
         if (TSFMainGUI.getAppState() == "send") {
             let currentAddr = $("#sendFromAddress").val();
-            console.log(currentAddr);
             if (!$("#sendFromAddress").val()) {
                 TSFMainGUI.showGeneralError("Sender address must be specified!");
                 return false;
@@ -95,29 +94,22 @@ $(document).on("render_send", function () {
         if (!addressName) {
             var wallets = TSFDatatabse.getWallets();
             addressName = wallets.names[$("#sendToAddress").val()];
-            console.log("addressName", addressName);
         }
         $("#sendToAddressName").html(addressName);
     });
 
     $("#sendFromAddress").off('change').on('change', function () {
         var optionText = $(this).find("option:selected").text();
-        console.log(optionText);
         var addrName = optionText.substr(0, optionText.indexOf('-'));
-        console.log(addrName);
         var addrValue = optionText.substr(optionText.indexOf("-") + 1).substring(1);
-        console.log(addrValue);
         var addr42 = addrValue.slice(0, 42);
         console.log(addr42);
         var isTSFSelected = $("#tokens").find("option:selected").text();
         if (isTSFSelected === "TSF") {
-            console.log("TSF");
             $("#tokenBalance").val(totalAmount);
         } else if (isTSFSelected === "BINAR") {
-            console.log("BINAR");
             getBinarBalance(addr42);
         } else if (isTSFSelected === "SZAR") {
-            console.log("SZAR");
             getSzarBalance(addr42);
         }
         // $.getJSON("https://explorer.tsf-platform.com/api/v1/address/tokenBalance/" + addr42,  function( result ) {
@@ -175,7 +167,6 @@ $(document).on("render_send", function () {
             var contract = new web3Local.eth.Contract(abi, "0x5157adC7156984520F2Aeb94247E6268f3091b6B");
             var binarHolder = addr42;
             contract.methods.balanceOf(binarHolder).call().then(function (binarBalanceTotal) {
-                console.log(parseInt(binarBalanceTotal));
                 $("#tokenBalance").val(binarBalanceTotal);
             });
         }
@@ -200,13 +191,11 @@ $(document).on("render_send", function () {
             var contract = new web3Local.eth.Contract(abi, "0x52CD8E72B438E362F0235080DD63EDb61B740656");
             var szarHolder = addr42;
             contract.methods.balanceOf(szarHolder).call().then(function (szarBalanceTotal) {
-                console.log(parseInt(szarBalanceTotal));
                 $("#tokenBalance").val(szarBalanceTotal);
             });
         }
-       
+
         var totalAmount = parseFloat(addrValue.trim().substring(45));
-        console.log(totalAmount);
         $("#tokenBalance").val(totalAmount);
         $(".tokenValue input").html(totalAmount);
 
@@ -215,16 +204,12 @@ $(document).on("render_send", function () {
 
         $("#tokens").off('change').on('change', function () {
             var currencySelected = $(this).find("option:selected").text();
-            console.log(currencySelected);
             if (currencySelected === "TSF") {
-                console.log("TSF");
                 $("#tokenBalance").val(totalAmount);
 
             } else if (currencySelected === "BINAR") {
-                console.log("BINAR");
                 getBinarBalance(addr42);
             } else if (currencySelected === "SZAR") {
-                console.log("SZAR");
                 getSzarBalance(addr42);
             }
         });
@@ -308,23 +293,17 @@ $(document).on("render_send", function () {
         if (TSFSend.validateSendForm()) {
             let tokenTransaction = false;
             var token = $("#tokens").find("option:selected").text();
-            console.log(token);
             let contractAddress = '';
             if (token === "TSF") {
-                console.log("TSF");
                 tokenTransaction = false;
                 contractAddress = $("#sendToAddress").val();
-                console.log(contractAddress);
             } else if (token === "BINAR") {
-                console.log("BINAR");
                 tokenTransaction = true;
                 contractAddress = '0x5157adC7156984520F2Aeb94247E6268f3091b6B';
             } else if (token === "SZAR") {
-                console.log("SZAR");
                 tokenTransaction = true;
                 contractAddress = '0x52CD8E72B438E362F0235080DD63EDb61B740656';
             }
-            console.log(tokenTransaction);
             TSFBlockchain.getTranasctionFee($("#sendFromAddress").val(), contractAddress, $("#sendAmmount").val(),
                 function (error) {
                     TSFMainGUI.showGeneralError(error);
@@ -341,9 +320,7 @@ $(document).on("render_send", function () {
 
                     function doSendTransaction() {
                         $('#dlgSendWalletPassword').iziModal('close');
-                        if(tokenTransaction) {
-                            console.log(token);
-                            console.log(contractAddress);
+                        if (tokenTransaction) {
                             TSFBlockchain.prepareTokenTransaction(
                                 contractAddress,
                                 $("#walletPassword").val(),
@@ -360,14 +337,13 @@ $(document).on("render_send", function () {
                                         },
                                         function (data1) {
                                             TSFSend.resetSendForm();
-                                            console.log("data1-txhash", data1);
                                             iziToast.success({
                                                 title: 'Sent',
                                                 message: 'Transaction was successfully sent to the chain',
                                                 position: 'topRight',
                                                 timeout: 5000
                                             });
-    
+
                                             TSFBlockchain.getTransaction(data1,
                                                 function (error) {
                                                     TSFMainGUI.showGeneralError(error);
@@ -375,9 +351,7 @@ $(document).on("render_send", function () {
                                                 function (transaction) {
                                                     console.log("transaction", transaction);
                                                     var amount = web3Local.utils.fromWei(transaction.value, 'ether');
-                                                    console.log(amount);
                                                     var timeTx = transaction.timestamp;
-                                                    console.log(timeTx);
                                                     ipcRenderer.send('storeTransaction', {
                                                         block: transaction.blockNumber,
                                                         txhash: transaction.hash.toLowerCase(),
@@ -393,7 +367,6 @@ $(document).on("render_send", function () {
                                 }
                             );
                         } else if (token === "TSF") {
-                            console.log("sending tsf");
                             TSFBlockchain.prepareTransaction(
                                 $("#walletPassword").val(),
                                 $("#sendFromAddress").val(),
@@ -409,14 +382,13 @@ $(document).on("render_send", function () {
                                         },
                                         function (data1) {
                                             TSFSend.resetSendForm();
-                                            console.log("data1-txhash", data1);
                                             iziToast.success({
                                                 title: 'Sent',
                                                 message: 'Transaction was successfully sent to the chain',
                                                 position: 'topRight',
                                                 timeout: 5000
                                             });
-    
+
                                             TSFBlockchain.getTransaction(data1,
                                                 function (error) {
                                                     TSFMainGUI.showGeneralError(error);
@@ -424,9 +396,7 @@ $(document).on("render_send", function () {
                                                 function (transaction) {
                                                     console.log("transaction", transaction);
                                                     var amount = web3Local.utils.fromWei(transaction.value, 'ether');
-                                                    console.log(amount);
                                                     var timeTx = transaction.timestamp;
-                                                    console.log(timeTx);
                                                     ipcRenderer.send('storeTransaction', {
                                                         block: transaction.blockNumber,
                                                         txhash: transaction.hash.toLowerCase(),

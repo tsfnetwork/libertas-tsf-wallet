@@ -1,15 +1,17 @@
 {
   "name": "LibertasTsfWallet",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Desktop wallet for TSF currency",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "build --dir",
-    "dist": "build"
+    "linux": "build --linux",
+    "dist": "build",
+    "installer": "electron-installer-windows --src dist/win-unpacked/ --dest dist/installers/ --config config.json"
   },
   "build": {
-    "appId": "LibertasTsfWallet",
+    "appId": "Opus Tsf Wallet",
     "files": [
       "modules/*",
       "assets/**/*",
@@ -26,9 +28,10 @@
         "bin/win/*"
       ]
     },
+    "asar": true,
     "linux": {
       "target": "tar.gz",
-      "icon": "build/icon.icns",
+      "icon": "assets/images/Opus1024.png",
       "artifactName": "Linux-${productName}-${version}.${ext}",
       "extraResources": [
         "bin/linux/*"
@@ -68,6 +71,7 @@
   "devDependencies": {
     "electron": "^3.0.12",
     "electron-builder": "^20.38.3",
+    "electron-installer-windows": "^3.0.0",
     "ethereumjs-common": "^1.5.2"
   }
 }

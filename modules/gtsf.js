@@ -1,4 +1,8 @@
-const {app, dialog, ipcMain} = require('electron');
+const {
+  app,
+  dialog,
+  ipcMain
+} = require('electron');
 const child_process = require('child_process');
 const appRoot = require('app-root-path');
 const path = require('path');
@@ -10,13 +14,15 @@ class Gtsf {
   constructor() {
     this.isRunning = false;
     this.gtsfProcess = null;
-     this.logGtsfEvents = false;
+    this.logGtsfEvents = false;
     // create the user data dir (needed for MacOS)
     if (!fs.existsSync(app.getPath('userData'))) {
       fs.mkdirSync(app.getPath('userData'));
     }
     if (this.logGtsfEvents) {
-      this.logStream = fs.createWriteStream(path.join(app.getPath("userData"), "gethlog.txt"), {flags: "a"});
+      this.logStream = fs.createWriteStream(path.join(app.getPath("userData"), "gethlog.txt"), {
+        flags: "a"
+      });
     }
 
     if (appRoot.path.indexOf('app.asar') > -1) {
@@ -25,7 +31,7 @@ class Gtsf {
       this.rootPath = appRoot.path;
     }
 
-    switch(os.type()) {
+    switch (os.type()) {
       case "Linux":
         this.binaries = path.join(this.rootPath, 'bin', 'linux');
         break;
@@ -59,7 +65,7 @@ class Gtsf {
         dialog.showErrorBox("Error starting application", "gtsf failed to start!");
         app.quit();
       } else {
-        this.gtsfProcess.on('error', function(err) {
+        this.gtsfProcess.on('error', function (err) {
           dialog.showErrorBox("Error starting application", "gtsf failed to start!");
           app.quit();
         });
@@ -69,10 +75,10 @@ class Gtsf {
             app.quit();
           }
         });
-        this.gtsfProcess.stderr.on('data', function(data) {
+        this.gtsfProcess.stderr.on('data', function (data) {
           TSFGtsf._writeLog(data.toString() + '\n');
         });
-        this.gtsfProcess.stdout.on('data', function(data) {
+        this.gtsfProcess.stdout.on('data', function (data) {
           TSFGtsf._writeLog(data.toString() + '\n');
         });
       }
@@ -83,17 +89,18 @@ class Gtsf {
   }
 
   stopGtsf() {
-    if (os.type() == "Windows_NT") {
-      const gtsfWrapePath = path.join(this.binaries, 'WrapGtsf.exe');
-      child_process.spawnSync(gtsfWrapePath, [this.gtsfProcess.pid]);
-    } else {
-      this.gtsfProcess.kill('SIGTERM');
-    }
+    // if (os.type() == "Windows_NT") {
+    //   const gtsfWrapePath = path.join(this.binaries, 'WrapGtsf.exe');
+    //   child_process.spawnSync(gtsfWrapePath, [this.gtsfProcess.pid]);
+    // } else {
+    //   this.gtsfProcess.kill('SIGTERM');
+    // }
+    this.gtsfProcess.kill('SIGTERM');
   }
 }
 
 ipcMain.on('stopGtsf', (event, arg) => {
   TSFGtsf.stopGtsf();
-});  
+});
 
 TSFGtsf = new Gtsf();
