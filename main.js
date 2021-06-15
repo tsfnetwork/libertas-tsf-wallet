@@ -20,6 +20,12 @@ locker.lock().then(function() {
       minHeight: 650,
       backgroundColor: "#000000",
       icon: 'assets/images/brand-logo-icon.png'
+      //for linux compiling ( require is not defined) uncomment web preferences
+      // ,
+      // webPreferences: {
+      //   nodeIntegration: true,
+      //   contextIsolation: false,
+      // }
     });
 
     // and load the index.html of the app.
