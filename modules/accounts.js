@@ -12,7 +12,8 @@ class Accounts {
     switch(os.type()) {
         case "Darwin":
           return path.join(os.homedir(), 'Library', 'Transaction_service_fee', 'keystore');
-          break;
+        case "Linux":
+          return path.join(os.homedir(), '.transaction_service_fee', 'keystore');
         default:
           return path.join(process.env.APPDATA, 'Transaction_service_fee', 'keystore');
     }     

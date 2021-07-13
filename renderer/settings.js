@@ -82,7 +82,7 @@ $(document).on("render_settings", function() {
         TSFMainGUI.showGeneralConfirmation("Do you really want to delete the blockchain data? Wallet will close and you will need to restart it!", function(result) {
             if (result) {                
                 var loading_screen = pleaseWait({
-                    logo: "assets/images/logo.png",
+                    logo: "assets/images/icon.png",
                     backgroundColor: '#000000',
                     loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Deleting blockchain data, wallet will automatically close, please wait...</div>"
                 });

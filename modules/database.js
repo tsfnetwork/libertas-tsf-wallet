@@ -98,10 +98,11 @@ ipcMain.on('deleteBlockchainData', (event, arg) => {
   function getBlockchainDataLocation() {
     switch(os.type()) {
         case "Darwin":
-          return path.join(os.homedir(), 'Library', 'Teslafunds', 'gtsf');
-          break;
+          return path.join(os.homedir(), 'Library', 'Transaction_service_fee', 'gtsf');
+        case "Linux":
+          return path.join(os.homedir(), '.transaction_service_fee', 'gtsf');  
         default:
-          return path.join(process.env.APPDATA, 'Teslafunds', 'gtsf');
+          return path.join(process.env.APPDATA, 'Transaction_service_fee', 'gtsf');
     }     
   }
 
